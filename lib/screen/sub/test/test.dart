@@ -51,6 +51,8 @@ class _TestState extends State<Test> {
           Padding(
             padding: EdgeInsets.all(12),
             child: Container(
+              width: double.infinity,
+              height: 127,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: CommonConstants.lightYellow,
@@ -88,7 +90,7 @@ class _TestState extends State<Test> {
               ),
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 50),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -150,6 +152,8 @@ class _TestState extends State<Test> {
   }
   Widget clearButton(){
     return Container(
+      width: 92,
+      height: 68,
       decoration: BoxDecoration(
         color: CommonConstants.whiteColor,
         border: Border.all(color: CommonConstants.redColor),
@@ -157,7 +161,7 @@ class _TestState extends State<Test> {
       ),
       child: Center(
         child: Icon(Icons.backspace_outlined,
-          size: 20,
+          size: 40,
           color: CommonConstants.redColor,
         ),
       ),
@@ -165,6 +169,8 @@ class _TestState extends State<Test> {
   }
   Widget acceptButton(){
     return Container(
+      width: 92,
+      height: 68,
       decoration: BoxDecoration(
         color: CommonConstants.greenColor,
         border: Border.all(color: CommonConstants.brownColor),
@@ -172,7 +178,7 @@ class _TestState extends State<Test> {
       ),
       child: Center(
         child: Icon(Icons.check,
-          size: 20,
+          size: 40,
           color: CommonConstants.whiteColor,
         ),
       ),

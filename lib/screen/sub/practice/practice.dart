@@ -105,52 +105,50 @@ class _PracticeState extends State<Practice> {
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Row(
-                      children: [
-                        for (int i=1; i<=5; i++) ...[
-                          Icon(Icons.star,
-                            size: 18,
-                            color: CommonConstants.starColor,
-                          )
-                        ],
+                  Row(
+                    children: [
+                      for (int i=1; i<=5; i++) ...[
+                        Icon(Icons.star,
+                          size: 18,
+                          color: CommonConstants.starColor,
+                        )
                       ],
-                    ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  Center(
-                    child: Row(
-                      children: [
-                        Text("1 x 6 = ",
-                          style: TextStyle(
-                            color: CommonConstants.blackColor,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w600
-                          ),
+                  Row(
+                    children: [
+                      Text("1 x 6 = ",
+                        style: TextStyle(
+                          color: CommonConstants.blackColor,
+                          fontSize: 26,
+                          fontWeight: FontWeight.w600
                         ),
-                        Center(
-                          child: Container(
-                            width: 47,
-                            height: 47,
-                            decoration: BoxDecoration(
-                              color: CommonConstants.whiteColor,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: CommonConstants.brownColor, width: 1),
-                            ),
-                            child: Text("?",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w700,
-                                color: CommonConstants.brownColor
-                              ),
+                      ),
+                      Center(
+                        child: Container(
+                          width: 47,
+                          height: 47,
+                          decoration: BoxDecoration(
+                            color: CommonConstants.whiteColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: CommonConstants.brownColor, width: 1),
+                          ),
+                          child: Text("?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: CommonConstants.brownColor
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  )
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
