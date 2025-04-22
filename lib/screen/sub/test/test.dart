@@ -71,7 +71,16 @@ class _TestState extends State<Test> {
                       width: 76,
                       height: 46,
                       child: TextField(
-                        
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: CommonConstants.brownColor),
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          filled: true,
+                          fillColor: CommonConstants.whiteColor
+                        ),
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
                       ),
                     )
                   ],
@@ -81,16 +90,46 @@ class _TestState extends State<Test> {
           ),
           SizedBox(height: 20),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-
+              buttonNumber(7),
+              buttonNumber(8),
+              buttonNumber(9),
             ],
-          )
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buttonNumber(4),
+              buttonNumber(5),
+              buttonNumber(6)
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buttonNumber(1),
+              buttonNumber(2),
+              buttonNumber(3)
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              clearButton(),
+              buttonNumber(0),
+              acceptButton()
+            ],
+          ),
         ],
       )
     );
   }
-  void buttonNumber(int num){
-    Container(
+  Widget buttonNumber(int num){
+    return Container(
       width: 92,
       height: 68,
       decoration: BoxDecoration(
@@ -109,8 +148,8 @@ class _TestState extends State<Test> {
       ),
     );
   }
-  void clearButton(){
-    Container(
+  Widget clearButton(){
+    return Container(
       decoration: BoxDecoration(
         color: CommonConstants.whiteColor,
         border: Border.all(color: CommonConstants.redColor),
@@ -124,8 +163,8 @@ class _TestState extends State<Test> {
       ),
     );
   }
-  void acceptButton(){
-    Container(
+  Widget acceptButton(){
+    return Container(
       decoration: BoxDecoration(
         color: CommonConstants.greenColor,
         border: Border.all(color: CommonConstants.brownColor),
@@ -134,7 +173,7 @@ class _TestState extends State<Test> {
       child: Center(
         child: Icon(Icons.check,
           size: 20,
-          color: CommonConstants.redColor,
+          color: CommonConstants.whiteColor,
         ),
       ),
     );
