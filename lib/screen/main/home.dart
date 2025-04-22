@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:math_app/screen/main/about.dart';
 import 'package:math_app/screen/main/advertisement.dart';
 import 'package:math_app/screen/main/language.dart';
@@ -8,6 +9,8 @@ import 'package:math_app/screen/sub/math_board/div_math_board.dart';
 import 'package:math_app/screen/sub/math_board/mul_math_board.dart';
 import 'package:math_app/screen/sub/practice/practice.dart';
 import 'package:math_app/screen/sub/test/start_test.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -20,6 +23,10 @@ class _HomeState extends State<Home> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    final settings = settingsProvider.settings;
+    bool isActive = settings.isMul;
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -77,16 +84,7 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(height: 10),
               Center(
-                child: Text("Bảng tính",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: CommonConstants.blackColor
-                  ),
-                ),
-              ),
-              Center(
-                child: Text("cửu chương",
+                child: Text(local.title,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w600,
@@ -101,7 +99,7 @@ class _HomeState extends State<Home> {
                   InkWell(
                     onTap: (){
                       setState(() {
-                        selectedIndex = 0;
+                        isActive = isActive;
                       });
                     },
                     child: Container(
@@ -109,8 +107,8 @@ class _HomeState extends State<Home> {
                       height: 96,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: selectedIndex == 0 ? CommonConstants.greenColor : CommonConstants.whiteColor,
-                        border: Border.all(color: selectedIndex == 0 ? CommonConstants.green2Color : CommonConstants.lightYellow2),
+                        color: isActive ? CommonConstants.greenColor : CommonConstants.whiteColor,
+                        border: Border.all(color: isActive ? CommonConstants.green2Color : CommonConstants.lightYellow2),
                         borderRadius: BorderRadius.circular(96),
                       ),
                       child: Column(
@@ -118,12 +116,12 @@ class _HomeState extends State<Home> {
                         children: [
                           Text("A x B",
                             style: TextStyle(
-                              color: selectedIndex == 0 ? CommonConstants.whiteColor : CommonConstants.blackColor,
+                              color: isActive ? CommonConstants.whiteColor : CommonConstants.blackColor,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(selectedIndex == 0 ? "0%" : "", 
+                          Text(isActive ? "0%" : "", 
                             style: TextStyle(
                               color: CommonConstants.whiteColor,
                               fontSize: 14,
@@ -137,7 +135,7 @@ class _HomeState extends State<Home> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        selectedIndex = 1;
+                        isActive = !isActive;
                       });
                     },
                     child: Container(
@@ -145,7 +143,7 @@ class _HomeState extends State<Home> {
                       height: 96,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: selectedIndex == 1 ? CommonConstants.greenColor : CommonConstants.whiteColor,
+                        color: isActive ? CommonConstants.greenColor : CommonConstants.whiteColor,
                         border: Border.all(color: selectedIndex == 1 ? CommonConstants.green2Color : CommonConstants.lightYellow2),
                         borderRadius: BorderRadius.circular(96),
                       ),
@@ -154,12 +152,12 @@ class _HomeState extends State<Home> {
                         children: [
                           Text("A : B",
                             style: TextStyle(
-                              color: selectedIndex == 1 ? CommonConstants.whiteColor : CommonConstants.blackColor,
+                              color: isActive ? CommonConstants.whiteColor : CommonConstants.blackColor,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(selectedIndex == 1 ? "0%" : "", 
+                          Text(isActive ? "0%" : "", 
                             style: TextStyle(
                               color: CommonConstants.whiteColor,
                               fontSize: 14,
@@ -186,11 +184,11 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   onPressed: () {
-                    selectedIndex == 0 
+                    isActive 
                     ? Navigator.push(context, MaterialPageRoute(builder: (context) => const MulMathBoard())) 
                     : Navigator.push(context, MaterialPageRoute(builder: (context) => const DivMathBoard()));
                   },
-                  child: Text("Bảng tính", 
+                  child: Text(local.calculate, 
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -214,7 +212,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const Practice()));
                   },
-                  child: Text("Luyện tập", 
+                  child: Text(local.practice, 
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -238,7 +236,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const StartTest()));
                   },
-                  child: Text("Kiểm tra", 
+                  child: Text(local.test, 
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -262,7 +260,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
 
                   },
-                  child: Text("Trò chơi rèn luyện", 
+                  child: Text(local.training, 
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,

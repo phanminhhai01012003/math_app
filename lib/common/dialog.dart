@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomDialog {
   void showFinishDialog(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) {
@@ -17,7 +19,7 @@ class CustomDialog {
             ),
             child: Column(
               children: [
-                Text("Chúc mừng! Bạn đã hoàn thành bài kiểm tra", 
+                Text(local.congratulations, 
                   style: TextStyle(
                     color: CommonConstants.blackColor,
                     fontSize: 22,
@@ -42,7 +44,7 @@ class CustomDialog {
                     onPressed: () {
 
                     },
-                    child: Text("Tuyệt vời",
+                    child: Text(local.awesome,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500

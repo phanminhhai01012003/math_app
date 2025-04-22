@@ -16,22 +16,25 @@ class _MulMathBoardState extends State<MulMathBoard> {
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
         backgroundColor: CommonConstants.whiteColor,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: CommonConstants.yellowColor,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: CommonConstants.brownColor, width: 1),
-            ),
-            child: Center(
-              child: Icon(Icons.arrow_back,
-                color: CommonConstants.blackColor,
-                size: 30,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: CommonConstants.yellowColor,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: CommonConstants.brownColor, width: 1),
+              ),
+              child: Center(
+                child: Icon(Icons.arrow_back,
+                  color: CommonConstants.blackColor,
+                  size: 30,
+                ),
               ),
             ),
           ),

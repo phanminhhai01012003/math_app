@@ -1,36 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class About extends StatelessWidget {
   const About({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
         backgroundColor: CommonConstants.whiteColor,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: CommonConstants.yellowColor,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: CommonConstants.brownColor, width: 1),
-            ),
-            child: Center(
-              child: Icon(Icons.arrow_back,
-                color: CommonConstants.blackColor,
-                size: 30,
+        leading: Padding(
+          padding: const EdgeInsets.all(12),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: CommonConstants.yellowColor,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: CommonConstants.brownColor, width: 1),
+              ),
+              child: Center(
+                child: Icon(Icons.arrow_back,
+                  color: CommonConstants.blackColor,
+                  size: 30,
+                ),
               ),
             ),
           ),
         ),
-        title: Text("Thông tin ứng dụng",
+        title: Text(local.info,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,

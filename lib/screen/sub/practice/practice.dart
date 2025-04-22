@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/core/provider/settings_provider.dart';
+import 'package:provider/provider.dart';
 
 class Practice extends StatefulWidget {
   const Practice({super.key});
@@ -21,9 +25,12 @@ class _PracticeState extends State<Practice> {
     "assets/dot/dot9.png",
     "assets/dot/dot10.png",
   ];
+  final num1 = Random(), num2 = Random();
   List<int> ans = [6,8,18,5];
   @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    final settings = settingsProvider.settings;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -121,7 +128,7 @@ class _PracticeState extends State<Practice> {
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Text("1 x 6 = ",
+                      Text("${num1.nextInt(settings.numRange as int)} x ${num2.nextInt(settings.numRange as int)} = ",
                         style: TextStyle(
                           color: CommonConstants.blackColor,
                           fontSize: 26,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Advertisement extends StatefulWidget {
   const Advertisement({super.key});
@@ -12,32 +13,36 @@ class _AdvertisementState extends State<Advertisement> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
         backgroundColor: CommonConstants.whiteColor,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: CommonConstants.yellowColor,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: CommonConstants.brownColor, width: 1),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.arrow_back,
-                color: CommonConstants.blackColor,
-                size: 30,
+        leading: Padding(
+          padding: const EdgeInsets.all(12),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: CommonConstants.yellowColor,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: CommonConstants.brownColor, width: 1),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: CommonConstants.blackColor,
+                  size: 30,
+                ),
               ),
             ),
           ),
         ),
-        title: Text("Loại bỏ quảng cáo",
+        title: Text(local.adTitle,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -50,7 +55,7 @@ class _AdvertisementState extends State<Advertisement> {
             onPressed: () {
 
             },
-            child: Text("Khôi phục",
+            child: Text(local.restore,
               style: TextStyle(
                 color: CommonConstants.brownColor,
                 fontSize: 13,
@@ -73,7 +78,7 @@ class _AdvertisementState extends State<Advertisement> {
           ),
           SizedBox(height: 10),
           Center(
-            child: Text("Chọn một kế hoạch phù hợp với bạn",
+            child: Text(local.plan,
               style: TextStyle(
                 color: CommonConstants.blackColor,
                 fontSize: 14,
@@ -112,7 +117,7 @@ class _AdvertisementState extends State<Advertisement> {
                             color: selectedIndex == 0 ? CommonConstants.blackColor : CommonConstants.brownColor,
                           ),
                           SizedBox(width: 10),
-                          Text("Một lần và mãi mãi",
+                          Text(local.forever,
                             style: TextStyle(
                               color: selectedIndex == 0 ? CommonConstants.blackColor : CommonConstants.brownColor,
                               fontSize: 15,
@@ -138,7 +143,7 @@ class _AdvertisementState extends State<Advertisement> {
                           color: CommonConstants.lightGreenColor,
                           borderRadius: BorderRadius.circular(19)
                         ),
-                        child: Text("Phổ biến nhất",
+                        child: Text(local.popular,
                           style: TextStyle(
                             color: CommonConstants.greenColor,
                             fontSize: 13,
@@ -149,7 +154,7 @@ class _AdvertisementState extends State<Advertisement> {
                     ),
                     SizedBox(height: 10),
                     Center(
-                      child: Text("Thanh toán một lần để loại bỏ quảng cáo mãi mãi",
+                      child: Text(local.pay,
                         style: TextStyle(
                           color: CommonConstants.blackColor,
                           fontSize: 15,
@@ -193,7 +198,7 @@ class _AdvertisementState extends State<Advertisement> {
                             color: selectedIndex == 1 ? CommonConstants.blackColor : CommonConstants.brownColor,
                           ),
                           SizedBox(width: 10),
-                          Text("Hằng ngày",
+                          Text(local.daily,
                             style: TextStyle(
                               color: selectedIndex == 1 ? CommonConstants.blackColor : CommonConstants.brownColor,
                               fontSize: 15,
@@ -205,7 +210,7 @@ class _AdvertisementState extends State<Advertisement> {
                     ),
                     SizedBox(height: 20),
                     Center(
-                      child: Text("Bạn xem một quảng cáo để tắt tất cả quảng cáo trong một ngày",
+                      child: Text(local.adDisable,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: CommonConstants.blackColor,
@@ -237,7 +242,7 @@ class _AdvertisementState extends State<Advertisement> {
                 onPressed: () {
                   
                 },
-                child: Text("Tiếp tục",
+                child: Text(local.cont,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
