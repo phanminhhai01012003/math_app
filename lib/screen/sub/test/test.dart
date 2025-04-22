@@ -80,6 +80,11 @@ class _TestState extends State<Test> {
             ),
           ),
           SizedBox(height: 20),
+          Row(
+            children: [
+
+            ],
+          )
         ],
       )
     );
@@ -104,7 +109,34 @@ class _TestState extends State<Test> {
       ),
     );
   }
-  void clearButton(Icon icon){
-
+  void clearButton(){
+    Container(
+      decoration: BoxDecoration(
+        color: CommonConstants.whiteColor,
+        border: Border.all(color: CommonConstants.redColor),
+        borderRadius: BorderRadius.circular(34),
+      ),
+      child: Center(
+        child: Icon(Icons.backspace_outlined,
+          size: 20,
+          color: CommonConstants.redColor,
+        ),
+      ),
+    );
+  }
+  void acceptButton(){
+    Container(
+      decoration: BoxDecoration(
+        color: CommonConstants.greenColor,
+        border: Border.all(color: CommonConstants.brownColor),
+        borderRadius: BorderRadius.circular(34),
+      ),
+      child: Center(
+        child: Icon(Icons.check,
+          size: 20,
+          color: CommonConstants.redColor,
+        ),
+      ),
+    );
   }
 }
