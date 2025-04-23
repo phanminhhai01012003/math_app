@@ -5,14 +5,16 @@ class SettingsModel {
   RangeValues resRange;
   RangeValues numRange;
   bool checkAns;
+  bool checkNumRange;
   double practicePercentage;
   bool showBlocks;
   int answerTime;
   SettingsModel({
     this.isMul = true,
-    this.resRange = const RangeValues(1, 90),
-    this.numRange = const RangeValues(1, 90),
-    this.checkAns = true,
+    this.resRange = const RangeValues(1, 90000),
+    this.numRange = const RangeValues(1, 300),
+    this.checkAns = false,
+    this.checkNumRange = false,
     this.practicePercentage = 20,
     this.showBlocks = true,
     this.answerTime = 15
@@ -25,6 +27,7 @@ class SettingsModel {
       "numRangeStart": numRange.start,
       "numRangeEnd": numRange.end, 
       "checkAns": checkAns,
+      "checkNumRange": checkNumRange,
       "practicePercentage": practicePercentage,
       "showBlocks": showBlocks,
       "answerTime": answerTime
@@ -42,6 +45,7 @@ class SettingsModel {
         json["numRangeEnd"] ?? 90
       ),
       checkAns: json["checkAns"] ?? true,
+      checkNumRange: json["checkNumRange"] ?? true,
       practicePercentage: json["practicePercentage"] ?? 20,
       showBlocks: json["showBlocks"] ?? true,
       answerTime: json["answerTime"] ?? 15
@@ -52,18 +56,20 @@ class SettingsModel {
     RangeValues? resRange,
     RangeValues? numRange,
     bool? checkAns,
+    bool? checkNumRange,
     double? practicePercentage,
     bool? showBlocks,
-    int? answerTime 
+    int? answerTime,
   }) {
     return SettingsModel(
       isMul: isMul ?? this.isMul,
       resRange: resRange ?? this.resRange,
       numRange: numRange ?? this.numRange,
       checkAns: checkAns ?? this.checkAns,
+      checkNumRange: checkNumRange ?? this.checkNumRange,
       practicePercentage: practicePercentage ?? this.practicePercentage,
       showBlocks: showBlocks ?? this.showBlocks,
-      answerTime: answerTime ?? this.answerTime
+      answerTime: answerTime ?? this.answerTime,
     );
   }
 }

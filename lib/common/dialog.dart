@@ -3,8 +3,7 @@ import 'package:math_app/common/common_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomDialog {
-  void showFinishDialog(BuildContext context) {
-    final local = AppLocalizations.of(context)!;
+  void showFinishDialog(BuildContext context, AppLocalizations local, VoidCallback onPressed) {
     showDialog(
       context: context,
       builder: (context) {
@@ -19,7 +18,7 @@ class CustomDialog {
             ),
             child: Column(
               children: [
-                Text(local.congratulations, 
+                Text(local.toString(), 
                   style: TextStyle(
                     color: CommonConstants.blackColor,
                     fontSize: 22,
@@ -39,11 +38,13 @@ class CustomDialog {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: CommonConstants.yellowColor,
-                      foregroundColor: CommonConstants.blackColor
+                      foregroundColor: CommonConstants.blackColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(color: CommonConstants.brownColor)
+                      )
                     ),
-                    onPressed: () {
-
-                    },
+                    onPressed: onPressed,
                     child: Text(local.awesome,
                       style: TextStyle(
                         fontSize: 18,
@@ -57,6 +58,85 @@ class CustomDialog {
           ),
         );
       }
+    );
+  }
+  void resetProgressDialog(BuildContext context){
+    final local = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: CommonConstants.whiteColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: CommonConstants.brownColor)
+          ),
+          child: Column(
+            children: [
+              Text(local.reset,
+                style: TextStyle(
+                  color: CommonConstants.blackColor,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 125,
+                    height: 56,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CommonConstants.whiteColor,
+                        foregroundColor: CommonConstants.blackColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(color: CommonConstants.brownColor)
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(local.cancel,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 125,
+                    height: 56,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CommonConstants.yellowColor,
+                        foregroundColor: CommonConstants.blackColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(color: CommonConstants.brownColor)
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(local.ok,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      )
     );
   }
 }

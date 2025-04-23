@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/screen/main/home.dart';
+import 'package:math_app/screen/sub/practice/practice.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:math_app/screen/sub/practice/practice_q_list.dart';
 
 class PracticeResult extends StatefulWidget {
   const PracticeResult({super.key});
@@ -11,6 +15,7 @@ class PracticeResult extends StatefulWidget {
 class _PracticeResultState extends State<PracticeResult> {
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -36,7 +41,7 @@ class _PracticeResultState extends State<PracticeResult> {
             ),
           ),
         ),
-        title: Text("Kết quả",
+        title: Text(local.result,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -44,6 +49,195 @@ class _PracticeResultState extends State<PracticeResult> {
           ),
         ),
         centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(5, (index) => Container(
+                alignment: Alignment.center,
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: CommonConstants.greenColor,
+                  borderRadius: BorderRadius.circular(48)
+                ),
+                child: Icon(Icons.check,
+                  size: 30,
+                  color: CommonConstants.whiteColor,
+                ),
+              )),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 160,
+                  height: 158,
+                  decoration: BoxDecoration(
+                    color: CommonConstants.greenColor,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: CommonConstants.green2Color)
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("10",
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(local.correct,
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 160,
+                  height: 158,
+                  decoration: BoxDecoration(
+                    color: CommonConstants.redColor,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: CommonConstants.red2Color)
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("0",
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(local.incorrect,
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 274,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CommonConstants.yellowColor,
+                  foregroundColor: CommonConstants.blackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: CommonConstants.brownColor, width: 1)
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PracticeQList()));
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.list_alt_rounded,
+                      size: 20,
+                    ),
+                    SizedBox(width: 22),
+                    Text(local.qList, 
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 274,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CommonConstants.yellowColor,
+                  foregroundColor: CommonConstants.blackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: CommonConstants.brownColor, width: 1)
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Practice()));
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.refresh_outlined,
+                      size: 20,
+                    ),
+                    SizedBox(width: 22),
+                    Text(local.again, 
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 274,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CommonConstants.yellowColor,
+                  foregroundColor: CommonConstants.blackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: CommonConstants.brownColor, width: 1)
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_back,
+                      size: 20,
+                    ),
+                    SizedBox(width: 22),
+                    Text("Menu", 
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

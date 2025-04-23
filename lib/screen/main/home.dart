@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:math_app/screen/main/about.dart';
@@ -96,77 +97,15 @@ class _HomeState extends State<Home> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  InkWell(
-                    onTap: (){
-                      setState(() {
-                        isActive = isActive;
-                      });
-                    },
-                    child: Container(
-                      width: 96,
-                      height: 96,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isActive ? CommonConstants.greenColor : CommonConstants.whiteColor,
-                        border: Border.all(color: isActive ? CommonConstants.green2Color : CommonConstants.lightYellow2),
-                        borderRadius: BorderRadius.circular(96),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("A x B",
-                            style: TextStyle(
-                              color: isActive ? CommonConstants.whiteColor : CommonConstants.blackColor,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(isActive ? "0%" : "", 
-                            style: TextStyle(
-                              color: CommonConstants.whiteColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                  CircleProgress(
+                    selected: isActive,
+                    operation: "A X B",
+                    percentage: "0%",
                   ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        isActive = !isActive;
-                      });
-                    },
-                    child: Container(
-                      width: 96,
-                      height: 96,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isActive ? CommonConstants.greenColor : CommonConstants.whiteColor,
-                        border: Border.all(color: selectedIndex == 1 ? CommonConstants.green2Color : CommonConstants.lightYellow2),
-                        borderRadius: BorderRadius.circular(96),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("A : B",
-                            style: TextStyle(
-                              color: isActive ? CommonConstants.whiteColor : CommonConstants.blackColor,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(isActive ? "0%" : "", 
-                            style: TextStyle(
-                              color: CommonConstants.whiteColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                  CircleProgress(
+                    selected: !isActive, 
+                    operation: "A : B", 
+                    percentage: "0%"
                   )
                 ],
               ),
@@ -362,6 +301,67 @@ class _HomeState extends State<Home> {
           ),
         ),
       )
+    );
+  }
+}
+class CircleProgress extends StatelessWidget {
+  bool selected;
+  String operation;
+  String percentage;
+  CircleProgress({super.key, required this.selected, required this.operation, required this.percentage});
+
+  @override
+  Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    bool isMul = settingsProvider.settings.isMul;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 96.w,
+          height: 96.h,
+          child: CircularProgressIndicator(
+            value: double.parse(percentage.replaceAll('%', ''))/100,
+            strokeWidth: 3,
+            backgroundColor: CommonConstants.greyColor,
+            color: selected ? CommonConstants.greenColor : CommonConstants.lightYellow2,
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            settingsProvider.updateMode(isMul);
+          },
+          child: Container(
+            width: 96.w,
+            height: 96.h,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: selected ? CommonConstants.greenColor : CommonConstants.whiteColor,
+              border: Border.all(color: selected ? CommonConstants.green2Color : CommonConstants.lightYellow2),
+              borderRadius: BorderRadius.circular(96),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(operation,
+                  style: TextStyle(
+                    color: selected ? CommonConstants.whiteColor : CommonConstants.blackColor,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(selected ? percentage : "", 
+                  style: TextStyle(
+                    color: CommonConstants.whiteColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }

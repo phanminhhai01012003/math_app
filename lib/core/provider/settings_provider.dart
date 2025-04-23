@@ -40,6 +40,11 @@ class SettingsProvider extends ChangeNotifier {
     _setupSettings();
     notifyListeners();
   }
+  void updateCheckNumRange(bool checkNumRange){
+    _settings = _settings.copyWith(checkNumRange: checkNumRange);
+    _setupSettings();
+    notifyListeners();
+  }
   void updateCheck(bool checkAns) {
     _settings = _settings.copyWith(checkAns: checkAns);
     _setupSettings();

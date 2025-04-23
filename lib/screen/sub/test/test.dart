@@ -9,6 +9,32 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
+  String input = "";
+  int num1 = 1, num2 = 6;
+  bool isCorrect = false, showRes = false;
+  void numberPress(int num){
+    if(input.length < 3) {setState(() {
+      input+=num.toString();
+    });}
+  }
+  void cancelPress(){
+    setState(() {
+      if(input.isNotEmpty){input = input.substring(0, input.length-1);}
+    });
+  }
+  void checkAnswer(){
+    if(input.isNotEmpty) {
+      setState(() {
+        isCorrect = int.parse(input) == num1 * num2;
+      });
+      Future.delayed(Duration(seconds: 2), (){
+        if(mounted) {setState(() {
+          showRes = false;
+          if(isCorrect) input = '';
+        });}
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +91,7 @@ class _TestState extends State<Test> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("10 x 9 = ",
+                    Text("${num1} x ${num2} = ",
                       style: TextStyle(
                         color: CommonConstants.blackColor,
                         fontSize: 26,
@@ -134,55 +160,64 @@ class _TestState extends State<Test> {
     );
   }
   Widget buttonNumber(int num){
-    return Container(
-      width: 92,
-      height: 68,
-      decoration: BoxDecoration(
-        color: CommonConstants.yellowColor,
-        border: Border.all(color: CommonConstants.brownColor),
-        borderRadius: BorderRadius.circular(34),
-      ),
-      child: Center(
-        child: Text("${num}",
-          style: TextStyle(
-            color: CommonConstants.brownColor,
-            fontSize: 26,
-            fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: () => numberPress(num),
+      child: Container(
+        width: 92,
+        height: 68,
+        decoration: BoxDecoration(
+          color: CommonConstants.yellowColor,
+          border: Border.all(color: CommonConstants.brownColor),
+          borderRadius: BorderRadius.circular(34),
+        ),
+        child: Center(
+          child: Text("${num}",
+            style: TextStyle(
+              color: CommonConstants.brownColor,
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
     );
   }
   Widget clearButton(){
-    return Container(
-      width: 92,
-      height: 68,
-      decoration: BoxDecoration(
-        color: CommonConstants.whiteColor,
-        border: Border.all(color: CommonConstants.redColor),
-        borderRadius: BorderRadius.circular(34),
-      ),
-      child: Center(
-        child: Icon(Icons.backspace_outlined,
-          size: 40,
-          color: CommonConstants.redColor,
+    return GestureDetector(
+      onTap: cancelPress,
+      child: Container(
+        width: 92,
+        height: 68,
+        decoration: BoxDecoration(
+          color: CommonConstants.whiteColor,
+          border: Border.all(color: CommonConstants.redColor),
+          borderRadius: BorderRadius.circular(34),
+        ),
+        child: Center(
+          child: Icon(Icons.backspace_outlined,
+            size: 40,
+            color: CommonConstants.redColor,
+          ),
         ),
       ),
     );
   }
   Widget acceptButton(){
-    return Container(
-      width: 92,
-      height: 68,
-      decoration: BoxDecoration(
-        color: CommonConstants.greenColor,
-        border: Border.all(color: CommonConstants.brownColor),
-        borderRadius: BorderRadius.circular(34),
-      ),
-      child: Center(
-        child: Icon(Icons.check,
-          size: 40,
-          color: CommonConstants.whiteColor,
+    return GestureDetector(
+      onTap: checkAnswer,
+      child: Container(
+        width: 92,
+        height: 68,
+        decoration: BoxDecoration(
+          color: CommonConstants.greenColor,
+          border: Border.all(color: CommonConstants.brownColor),
+          borderRadius: BorderRadius.circular(34),
+        ),
+        child: Center(
+          child: Icon(Icons.check,
+            size: 40,
+            color: CommonConstants.whiteColor,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Language extends StatefulWidget {
   const Language({super.key});
@@ -9,20 +10,15 @@ class Language extends StatefulWidget {
 }
 
 class _LanguageState extends State<Language> {
-  bool check = true;
-  List<Map<String, dynamic>> languages = [
-    {
-      'logo': 'assets/vn.png',
-      'content': 'Tiếng Việt',
-    },
-    {
-      'logo': 'assets/en.png',
-      'content': 'English'
-    }
-  ];
-  int selectedIndex = 0;
+  var vnFlag = "assets/vn.png";
+  var enFlag = "assets/en.png";
+  Future<void> setLocale(Locale locale, String code) async{
+    
+  }
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    final currentLocal = Localizations.localeOf(context);
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -50,7 +46,7 @@ class _LanguageState extends State<Language> {
             ),
           ),
         ),
-        title: Text("Ngôn ngữ",
+        title: Text(local.language,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -65,55 +61,58 @@ class _LanguageState extends State<Language> {
           children: [
             Divider(color: CommonConstants.brownColor, thickness: 2),
             SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: languages.length,
-              itemBuilder: (context, index){
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: selectedIndex == index ? CommonConstants.yellowColor : CommonConstants.whiteColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: CommonConstants.lightYellow2,
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
-                          )
-                        ]
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(languages[index]['logo'],
-                            fit: BoxFit.cover,
-                            width: 40,
-                            height: 40,
-                          ),
-                          SizedBox(height: 20),
-                          Text(languages[index]['content'],
-                            style: TextStyle(
-                              color: CommonConstants.blackColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
+            LanguageTile(
+              flag: vnFlag,
+              title: "Tiếng Việt",
+              onTap: () => setLocale(Locale('vi'), 'vi'),
+              selected: currentLocal.languageCode == 'vi',
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+class LanguageTile extends StatelessWidget {
+  final String flag;
+  final String title;
+  final VoidCallback onTap;
+  final bool selected;
+  LanguageTile({required this.flag, required this.title, required this.onTap, required this.selected});
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Container(
+        alignment: Alignment.center,
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: selected ? CommonConstants.yellowColor : CommonConstants.whiteColor,
+          boxShadow: [
+            BoxShadow(
+              color: CommonConstants.lightYellow2,
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0,3)
+            )
+          ]
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(flag,
+              fit: BoxFit.cover,
+              width: 40,
+              height: 40,
+            ),
+            SizedBox(height: 20),
+            Text(title,
+              style: TextStyle(
+                color: CommonConstants.blackColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w400
+              ),
             )
           ],
         ),

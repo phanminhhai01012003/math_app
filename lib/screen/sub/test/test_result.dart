@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:math_app/screen/main/home.dart';
+import 'package:math_app/screen/sub/test/test.dart';
+import 'package:math_app/screen/sub/test/test_q_list.dart';
 
 class TestResult extends StatefulWidget {
   const TestResult({super.key});
@@ -11,6 +15,7 @@ class TestResult extends StatefulWidget {
 class _TestResultState extends State<TestResult> {
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -36,7 +41,7 @@ class _TestResultState extends State<TestResult> {
             ),
           ),
         ),
-        title: Text("Kết quả",
+        title: Text(local.result,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -85,8 +90,48 @@ class _TestResultState extends State<TestResult> {
                         Text("10",
                           style: TextStyle(
                             color: CommonConstants.whiteColor,
-                            fontSize: 40,
+                            fontSize: 26,
                             fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(local.correct,
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 160,
+                  height: 158,
+                  decoration: BoxDecoration(
+                    color: CommonConstants.redColor,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: CommonConstants.red2Color)
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("0",
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(local.incorrect,
+                          style: TextStyle(
+                            color: CommonConstants.whiteColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500
                           ),
                         )
                       ],
@@ -94,7 +139,103 @@ class _TestResultState extends State<TestResult> {
                   ),
                 ),
               ],
-            )
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 274,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CommonConstants.yellowColor,
+                  foregroundColor: CommonConstants.blackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: CommonConstants.brownColor, width: 1)
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TestQList()));
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.list_alt_rounded,
+                      size: 20,
+                    ),
+                    SizedBox(width: 22),
+                    Text(local.qList, 
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 274,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CommonConstants.yellowColor,
+                  foregroundColor: CommonConstants.blackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: CommonConstants.brownColor, width: 1)
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Test()));
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.refresh_outlined,
+                      size: 20,
+                    ),
+                    SizedBox(width: 22),
+                    Text(local.again, 
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 274,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CommonConstants.yellowColor,
+                  foregroundColor: CommonConstants.blackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: CommonConstants.brownColor, width: 1)
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_back,
+                      size: 20,
+                    ),
+                    SizedBox(width: 22),
+                    Text("Menu", 
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

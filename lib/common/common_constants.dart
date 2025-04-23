@@ -17,4 +17,5 @@ class CommonConstants {
   static const lightBrown = Color(0xFF968B7E);
   static const starColor = Color(0xFFFEB704);
   static const lightGreenColor = Color(0xFFE1FFEC);
+  static const red2Color = Color(0xFFD95A46);
 }

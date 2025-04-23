@@ -58,7 +58,7 @@ class _SettingsState extends State<Settings> {
           builder: (context, settingsProvider, child) {
             final settings = settingsProvider.settings;
             bool isActive = settings.isMul;
-            bool isChecked1 = settings.checkAns;
+            bool isChecked1 = settings.checkNumRange;
             bool isChecked2 = settings.checkAns;
             bool isChecked3 = settings.showBlocks;
             return SingleChildScrollView(
@@ -172,10 +172,8 @@ class _SettingsState extends State<Settings> {
                                     Checkbox(
                                       value: isChecked1,
                                       activeColor: CommonConstants.yellowColor,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          isChecked1 = newValue!;
-                                        });
+                                      onChanged: (value) {
+                                        settingsProvider.updateCheckNumRange(value!);
                                       },
                                     ),
                                     SizedBox(width: 10),
@@ -190,8 +188,9 @@ class _SettingsState extends State<Settings> {
                                     SizedBox(
                                       width: 86,
                                       height: 40,
-                                      child: TextField(
+                                      child: TextFormField(
                                         enabled: isChecked1,
+                                        initialValue: settings.resRange.start.toString(),
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                                 borderSide: BorderSide(
@@ -207,6 +206,14 @@ class _SettingsState extends State<Settings> {
                                           signed: false
                                         ),
                                         textAlign: TextAlign.center,
+                                        onChanged: (value) {
+                                          settingsProvider.updateResultRange(
+                                            RangeValues(
+                                              settings.resRange.start, 
+                                              (int.tryParse(value) ?? 90000).toDouble()
+                                            )
+                                          );
+                                        },
                                       ),
                                     ),
                                     SizedBox(width: 10),
@@ -221,8 +228,9 @@ class _SettingsState extends State<Settings> {
                                     SizedBox(
                                       width: 86,
                                       height: 40,
-                                      child: TextField(
+                                      child: TextFormField(
                                           enabled: isChecked1,
+                                          initialValue: settings.resRange.end.toString(),
                                           decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                                 borderSide: BorderSide(
@@ -235,6 +243,14 @@ class _SettingsState extends State<Settings> {
                                                 CommonConstants.whiteColor,
                                           ),
                                           textAlign: TextAlign.center,
+                                          onChanged: (value){
+                                            settingsProvider.updateResultRange(
+                                              RangeValues(
+                                                (int.tryParse(value) ?? 1).toDouble(), 
+                                                settings.resRange.end
+                                              )
+                                            );
+                                          },
                                           keyboardType: TextInputType.numberWithOptions(
                                             signed: false,
                                             decimal: false
@@ -276,7 +292,8 @@ class _SettingsState extends State<Settings> {
                                     SizedBox(
                                       width: 86,
                                       height: 40,
-                                      child: TextField(
+                                      child: TextFormField(
+                                        initialValue: settings.numRange.start.toString(),
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                                 borderSide: BorderSide(
@@ -289,6 +306,14 @@ class _SettingsState extends State<Settings> {
                                                 CommonConstants.whiteColor),
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
+                                        onChanged: (value) {
+                                          settingsProvider.updateNumberRange(
+                                            RangeValues(
+                                              settings.numRange.start,
+                                              (int.tryParse(value) ?? 90000).toDouble(),
+                                            )
+                                          );
+                                        },
                                       ),
                                     ),
                                     SizedBox(width: 20),
@@ -303,7 +328,8 @@ class _SettingsState extends State<Settings> {
                                     SizedBox(
                                       width: 86,
                                       height: 40,
-                                      child: TextField(
+                                      child: TextFormField(
+                                        initialValue: settings.numRange.end.toString(),
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                                 borderSide: BorderSide(
@@ -316,6 +342,14 @@ class _SettingsState extends State<Settings> {
                                                 CommonConstants.whiteColor),
                                         keyboardType: TextInputType.number,
                                         textAlign: TextAlign.center,
+                                        onChanged: (value) {
+                                          settingsProvider.updateNumberRange(
+                                            RangeValues(
+                                              (int.tryParse(value) ?? 1).toDouble(),
+                                              settings.numRange.end
+                                            )
+                                          );
+                                        },
                                       ),
                                     ),
                                   ],
