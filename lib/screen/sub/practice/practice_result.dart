@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/screen/main/home.dart';
 import 'package:math_app/screen/sub/practice/practice.dart';
@@ -6,7 +7,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:math_app/screen/sub/practice/practice_q_list.dart';
 
 class PracticeResult extends StatefulWidget {
-  const PracticeResult({super.key});
+  final int correctCount;
+  final int wrongCount;
+  final int total;
+  const PracticeResult({
+    super.key, 
+    required this.correctCount,
+    required this.wrongCount,
+    this.total = 10,
+  });
 
   @override
   State<PracticeResult> createState() => _PracticeResultState();
@@ -16,6 +25,7 @@ class _PracticeResultState extends State<PracticeResult> {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
+    double percentage = (widget.correctCount/(widget.correctCount+widget.wrongCount))*100;
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -53,24 +63,34 @@ class _PracticeResultState extends State<PracticeResult> {
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(5, (index) => Container(
-                alignment: Alignment.center,
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: CommonConstants.greenColor,
-                  borderRadius: BorderRadius.circular(48)
-                ),
-                child: Icon(Icons.check,
-                  size: 30,
-                  color: CommonConstants.whiteColor,
-                ),
-              )),
+            Text(local.progress,
+              style: TextStyle(
+                fontSize: 20.sp,
+                color: CommonConstants.brownColor,
+                fontWeight: FontWeight.w500
+              ),
             ),
             SizedBox(height: 20),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: 40.h,
+              decoration: BoxDecoration(
+                color: CommonConstants.lightYellow,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: CommonConstants.brownColor),
+              ),
+              child: Text(
+                "${percentage.toStringAsFixed(0)}%",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: CommonConstants.blackColor
+                ),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -87,7 +107,7 @@ class _PracticeResultState extends State<PracticeResult> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("10",
+                        Text("${widget.correctCount}",
                           style: TextStyle(
                             color: CommonConstants.whiteColor,
                             fontSize: 26,
@@ -119,7 +139,7 @@ class _PracticeResultState extends State<PracticeResult> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("0",
+                        Text("${widget.wrongCount}",
                           style: TextStyle(
                             color: CommonConstants.whiteColor,
                             fontSize: 26,

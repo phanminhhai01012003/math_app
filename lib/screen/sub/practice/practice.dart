@@ -1,8 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/core/provider/mul_provider.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
+import 'package:math_app/model/div_model.dart';
+import 'package:math_app/model/mul_model.dart';
+import 'package:math_app/screen/sub/practice/practice_div.dart';
+import 'package:math_app/screen/sub/practice/practice_mul.dart';
 import 'package:provider/provider.dart';
 
 class Practice extends StatefulWidget {
@@ -13,24 +19,25 @@ class Practice extends StatefulWidget {
 }
 
 class _PracticeState extends State<Practice> {
-  List<String> dotImages = [
-    "assets/dot/dot1.png",
-    "assets/dot/dot2.png",
-    "assets/dot/dot3.png",
-    "assets/dot/dot4.png",
-    "assets/dot/dot5.png",
-    "assets/dot/dot6.png",
-    "assets/dot/dot7.png",
-    "assets/dot/dot8.png",
-    "assets/dot/dot9.png",
-    "assets/dot/dot10.png",
-  ];
-  final num1 = Random(), num2 = Random();
-  List<int> ans = [6,8,18,5];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(seconds: 0), (){
+      if(!mounted) return;
+      try{
+        final mulProvider = Provider.of<MulProvider>(context, listen: false);
+        mulProvider.onSettingChanged();
+      }catch(e){
+        throw Exception(e.toString());
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
     final settings = settingsProvider.settings;
+    bool isMul = settings.isMul;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -63,133 +70,372 @@ class _PracticeState extends State<Practice> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          Text("1/10",
-            style: TextStyle(
-              color: CommonConstants.blackColor,
-              fontSize: 16,
-              fontWeight: FontWeight.w400
+      ),
+      body: isMul ? PracticeMul() : PracticeDiv(),
+    );
+  }
+}
+class DotImages extends StatelessWidget {
+  final List<String> dotImages;
+  const DotImages({super.key, required this.dotImages});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(12),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: CommonConstants.lightYellow,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+          ),
+          shrinkWrap: true,
+          itemCount: dotImages.length,
+          itemBuilder: (context, index) {
+            return Image.asset(dotImages[index],
+              fit: BoxFit.cover,
+              width: 37,
+              height: 37,
+            );
+          },
+        )
+      ),
+    );
+  }
+}
+class DataScreen extends StatelessWidget {
+  final bool showStar;
+  final int num1;
+  final int num2;
+  const DataScreen({super.key, this.showStar = true, required this.num1, required this.num2});
+
+  @override
+  Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    bool isMul = settingsProvider.settings.isMul;
+    return Container(
+      height: 127.h,
+      width: 343.w,
+      decoration: BoxDecoration(
+        color: CommonConstants.lightYellow,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for(int i=1; i<=5; i++) ...[
+              Icon(Icons.star,
+                size: 30,
+                color: CommonConstants.starColor,
+              )
+            ],
+            SizedBox(height: 30.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                isMul ? Text("$num1 x $num2 = ",
+                  style: TextStyle(
+                    color: CommonConstants.blackColor,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w600
+                  ),
+                ) : Text("$num1 : $num2",
+                  style: TextStyle(
+                    color: CommonConstants.blackColor,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    width: 47,
+                    height: 47,
+                    decoration: BoxDecoration(
+                      color: CommonConstants.whiteColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: CommonConstants.brownColor, width: 1),
+                    ),
+                    child: Text("?",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: CommonConstants.brownColor
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class ChooseResultMul extends StatefulWidget {
+  final MulModel? currMul;
+  final Function showNext;
+  const ChooseResultMul({super.key, required this.currMul, required this.showNext});
+
+  @override
+  State<ChooseResultMul> createState() => _ChooseResultMulState();
+}
+
+class _ChooseResultMulState extends State<ChooseResultMul> {
+  List<int> resList = [];
+  Set<int> wrongAnswers = {};
+  int? selectedAnswer;
+  bool? isCorrectAnswer;
+  bool isProcessing = false;
+  final random = Random();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _genAnsOptions();
+  }
+  @override
+  void didUpdateWidget(covariant ChooseResultMul oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if(widget.currMul != oldWidget.currMul){
+      setState(() {
+        selectedAnswer=null;
+        isCorrectAnswer=null;
+        wrongAnswers.clear();
+        isProcessing=false;
+      });
+      _genAnsOptions();
+    }
+  }
+  void _genAnsOptions(){
+    if(widget.currMul==null) return;
+    resList.clear();
+    resList.add(widget.currMul!.res);
+    final int correctRes = widget.currMul!.res;
+    final int minRange = max(1, (correctRes*0.8).toInt());
+    final int maxRange = max(minRange+10, (correctRes*1.2).toInt());
+    while(resList.length < 4){
+      int wrongAnswers = minRange+random.nextInt(maxRange-minRange);
+      if(wrongAnswers!=correctRes && !resList.contains(wrongAnswers)){
+        resList.add(wrongAnswers);
+      }
+    }
+    resList.shuffle();
+  }
+  Future<void> handleAnswer(int selected) async{
+    if(widget.currMul == null || isProcessing) return;
+    setState(() {
+      isProcessing = true;
+      selectedAnswer = selected;
+    });
+    final bool isCorrect = selected == widget.currMul!.res;
+    final multiProvider = Provider.of<MulProvider>(context, listen: false);
+    setState(() {
+      isCorrectAnswer = isCorrect;
+      if(!isCorrect) wrongAnswers.add(selected); 
+    });
+    await multiProvider.recordAnswer(isCorrect, selected);
+    if(isCorrect) {
+      await Future.delayed(Duration(seconds: 2));
+      if(!mounted) return;
+      if(multiProvider.isCompleted){
+        
+      }
+    } else{
+      await Future.delayed(Duration(milliseconds: 500));
+    }
+    if(mounted){
+      setState(() {
+        selectedAnswer=null;
+        isCorrectAnswer=null;
+        isProcessing=false;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        children: [
+          SizedBox(height: 15.h),
+          GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 2,
+            mainAxisSpacing: 16.h,
+            crossAxisSpacing: 16.w,
+            childAspectRatio: 1.5,
+            children: resList.map((a){
+              bool isWrong = wrongAnswers.contains(a);
+              bool isSelected = selectedAnswer == a;
+              bool isCorrect = a==widget.currMul?.res;
+              Color bgColor = CommonConstants.whiteColor;
+              if(isSelected){
+                bgColor = isCorrect ? CommonConstants.greenColor : CommonConstants.redColor;
+              }
+              return GestureDetector(
+                onTap: (!isWrong && !isProcessing) ? 
+                () => handleAnswer(a) : null,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    border: Border.all(color: CommonConstants.brownColor, width: 2),
+                    borderRadius: BorderRadius.circular(12.r)
+                  ),
+                  child: Center(
+                    child: Text(a.toString(),
+                      style: TextStyle(
+                        color: CommonConstants.blackColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24.sp
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           )
         ],
       ),
-      body: Column(
+    );
+  }
+}
+class ChooseResultDiv extends StatefulWidget {
+  final DivModel currDiv;
+  final Function showNext;
+  const ChooseResultDiv({super.key, required this.currDiv, required this.showNext});
+
+  @override
+  State<ChooseResultDiv> createState() => _ChooseResultDivState();
+}
+
+class _ChooseResultDivState extends State<ChooseResultDiv> {
+  List<int> resList = [];
+  Set<int> wrongAnswers = {};
+  int? selectedAnswer;
+  bool? isCorrectAnswer;
+  bool isProcessing = false;
+  final random = Random();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _genAnsOptions();
+  }
+  @override
+  void didUpdateWidget(covariant ChooseResultDiv oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if(widget.currDiv != oldWidget.currDiv){
+      setState(() {
+        selectedAnswer=null;
+        isCorrectAnswer=null;
+        wrongAnswers.clear();
+        isProcessing=false;
+      });
+      _genAnsOptions();
+    }
+  }
+  void _genAnsOptions(){
+    if(widget.currDiv==null) return;
+    resList.clear();
+    resList.add(widget.currDiv!.res);
+    final int correctRes = widget.currDiv!.res;
+    final int minRange = max(1, (correctRes*0.8).toInt());
+    final int maxRange = max(minRange+10, (correctRes*1.2).toInt());
+    while(resList.length < 4){
+      int wrongAnswers = minRange+random.nextInt(maxRange-minRange);
+      if(wrongAnswers!=correctRes && !resList.contains(wrongAnswers)){
+        resList.add(wrongAnswers);
+      }
+    }
+    resList.shuffle();
+  }
+  Future<void> handleAnswer(int selected) async{
+    if(widget.currDiv == null || isProcessing) return;
+    setState(() {
+      isProcessing = true;
+      selectedAnswer = selected;
+    });
+    final bool isCorrect = selected == widget.currDiv!.res;
+    final multiProvider = Provider.of<MulProvider>(context, listen: false);
+    setState(() {
+      isCorrectAnswer = isCorrect;
+      if(!isCorrect) wrongAnswers.add(selected); 
+    });
+    await multiProvider.recordAnswer(isCorrect, selected);
+    if(isCorrect) {
+      await Future.delayed(Duration(seconds: 2));
+      if(!mounted) return;
+      if(multiProvider.isCompleted){
+        
+      }
+    } else{
+      await Future.delayed(Duration(milliseconds: 500));
+    }
+    if(mounted){
+      setState(() {
+        selectedAnswer=null;
+        isCorrectAnswer=null;
+        isProcessing=false;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
         children: [
-          Divider(color: CommonConstants.brownColor, thickness: 1),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: CommonConstants.lightYellow,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5
-                ),
-                shrinkWrap: true,
-                itemCount: dotImages.length,
-                itemBuilder: (context, index) {
-                  return Image.asset(dotImages[index],
-                    fit: BoxFit.cover,
-                    width: 37,
-                    height: 37,
-                  );
-                },
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: CommonConstants.lightYellow,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      for (int i=1; i<=5; i++) ...[
-                        Icon(Icons.star,
-                          size: 18,
-                          color: CommonConstants.starColor,
-                        )
-                      ],
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text("${num1.nextInt(settings.numRange as int)} x ${num2.nextInt(settings.numRange as int)} = ",
-                        style: TextStyle(
-                          color: CommonConstants.blackColor,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w600
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          width: 47,
-                          height: 47,
-                          decoration: BoxDecoration(
-                            color: CommonConstants.whiteColor,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: CommonConstants.brownColor, width: 1),
-                          ),
-                          child: Text("?",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w700,
-                              color: CommonConstants.brownColor
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1.5
-              ),
-              shrinkWrap: true,
-              itemCount: ans.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
+          SizedBox(height: 15.h),
+          GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 2,
+            mainAxisSpacing: 16.h,
+            crossAxisSpacing: 16.w,
+            childAspectRatio: 1.5,
+            children: resList.map((a){
+              bool isWrong = wrongAnswers.contains(a);
+              bool isSelected = selectedAnswer == a;
+              bool isCorrect = a==widget.currDiv?.res;
+              Color bgColor = CommonConstants.whiteColor;
+              if(isSelected){
+                bgColor = isCorrect ? CommonConstants.greenColor : CommonConstants.redColor;
+              }
+              return GestureDetector(
+                onTap: (!isWrong && !isProcessing) ? 
+                () => handleAnswer(a) : null,
+                child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: CommonConstants.brownColor),
-                    borderRadius: BorderRadius.circular(16),
+                    color: bgColor,
+                    border: Border.all(color: CommonConstants.brownColor, width: 2),
+                    borderRadius: BorderRadius.circular(12.r)
                   ),
-                  child: Text("${ans[index]}",
-                    style: TextStyle(
-                      color: CommonConstants.blackColor,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w600
+                  child: Center(
+                    child: Text(a.toString(),
+                      style: TextStyle(
+                        color: CommonConstants.blackColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24.sp
+                      ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            }).toList(),
           )
         ],
-      )
+      ),
     );
   }
 }

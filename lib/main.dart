@@ -17,7 +17,7 @@ void main() async{
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => settingsProvider),
-      ChangeNotifierProvider(create: (context) => DivProvider()),
+      ChangeNotifierProvider(create: (context) => DivProvider(settingsProvider: settingsProvider)),
       ChangeNotifierProvider(create: (context) => MulProvider(settingsProvider: settingsProvider))
     ],
     child: const MyApp()
@@ -25,6 +25,10 @@ void main() async{
 }
 
 class MyApp extends StatefulWidget {
+  static void setLocale(BuildContext context, Locale newLocale){
+    final _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(newLocale);
+  }
   const MyApp({super.key});
 
   @override

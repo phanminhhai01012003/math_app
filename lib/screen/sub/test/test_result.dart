@@ -6,8 +6,15 @@ import 'package:math_app/screen/sub/test/test.dart';
 import 'package:math_app/screen/sub/test/test_q_list.dart';
 
 class TestResult extends StatefulWidget {
-  const TestResult({super.key});
-
+  final int correctCount;
+  final int wrongCount;
+  final int total;
+  const TestResult({
+    super.key,
+    required this.correctCount,
+    required this.wrongCount,
+    this.total = 10
+  });
   @override
   State<TestResult> createState() => _TestResultState();
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/common/dialog.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,6 +13,11 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  CustomDialog custom = CustomDialog();
+  @override
+  void dispose(){
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
@@ -476,7 +482,11 @@ class _SettingsState extends State<Settings> {
                                     SizedBox(
                                       width: 64,
                                       height: 40,
-                                      child: TextField(
+                                      child: TextFormField(
+                                        initialValue: settings.answerTime.toString(),
+                                        onChanged: (value){
+                                          settingsProvider.updateAnswerTime(int.tryParse(value) ?? 15);
+                                        },
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -510,19 +520,27 @@ class _SettingsState extends State<Settings> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                        color: CommonConstants.yellowColor,
-                                        borderRadius: BorderRadius.circular(30),
-                                        border: Border.all(
-                                            color: CommonConstants.brownColor)),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 20,
-                                        color: CommonConstants.blackColor,
+                                  GestureDetector(
+                                    onTap: () {
+                                      custom.resetProgressDialog(context, (){
+                                        settingsProvider.reset();
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          color: CommonConstants.yellowColor,
+                                          borderRadius: BorderRadius.circular(30),
+                                          border: Border.all(
+                                              color: CommonConstants.brownColor)),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.delete,
+                                          size: 20,
+                                          color: CommonConstants.blackColor,
+                                        ),
                                       ),
                                     ),
                                   ),

@@ -3,7 +3,8 @@ import 'package:math_app/common/common_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Language extends StatefulWidget {
-  const Language({super.key});
+  final Function(Locale) onLocalChanged;
+  const Language({super.key, required this.onLocalChanged});
 
   @override
   State<Language> createState() => _LanguageState();
@@ -12,9 +13,6 @@ class Language extends StatefulWidget {
 class _LanguageState extends State<Language> {
   var vnFlag = "assets/vn.png";
   var enFlag = "assets/en.png";
-  Future<void> setLocale(Locale locale, String code) async{
-    
-  }
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
@@ -64,8 +62,14 @@ class _LanguageState extends State<Language> {
             LanguageTile(
               flag: vnFlag,
               title: "Tiếng Việt",
-              onTap: () => setLocale(Locale('vi'), 'vi'),
+              onTap: () => widget.onLocalChanged(Locale("vi")),
               selected: currentLocal.languageCode == 'vi',
+            ),
+            LanguageTile(
+              flag: enFlag,
+              title: "English",
+              onTap: () => widget.onLocalChanged(Locale("en")),
+              selected: currentLocal.languageCode == 'en',
             )
           ],
         ),

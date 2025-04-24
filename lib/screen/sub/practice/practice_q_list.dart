@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/core/provider/div_provider.dart';
+import 'package:math_app/core/provider/mul_provider.dart';
+import 'package:math_app/core/provider/settings_provider.dart';
+import 'package:math_app/model/answer_record.dart';
+import 'package:provider/provider.dart';
 
 class PracticeQList extends StatefulWidget {
   const PracticeQList({super.key});
@@ -13,6 +19,8 @@ class _PracticeQListState extends State<PracticeQList> {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
+    final provider = context.watch<SettingsProvider>();
+    bool isMul = provider.settings.isMul;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -49,47 +57,117 @@ class _PracticeQListState extends State<PracticeQList> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Divider(color: CommonConstants.brownColor, thickness: 1),
-          SizedBox(height: 20),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(19),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 5,
-                  spreadRadius: 5,
-                  color: CommonConstants.lightYellow2,
-                  offset: Offset(0, 5)
-                )
-              ],
+      body: isMul ? mulList(context) : divList(context)
+    );
+  }
+  Widget mulList(BuildContext context){
+    return Consumer<MulProvider>(
+      builder: (context, mulProvider, child){
+        List<AnswerRecord> answers = mulProvider.ansHistory;
+        return answers.isEmpty ? Center(
+          child: Text("Chưa có câu trả lời nào",
+            style: TextStyle(
+              color: CommonConstants.blackColor,
+              fontSize: 18.sp
             ),
-            child: Column(
-              children: List.generate(10, (index){
-                return Row(
+          ),
+        ) : Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+          height: 666.h,
+          width: 343.w,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border(bottom: BorderSide(color: CommonConstants.brownColor, width: 1))
+          ),
+          child: ListView.builder(
+            padding: EdgeInsets.all(16.r),
+            itemCount: answers.length,
+            itemBuilder: (context, index){
+              AnswerRecord ans = answers[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 12.h),
+                padding: EdgeInsets.all(12.r),
+                child: Row(
                   children: [
-                    Icon(Icons.check,
-                      size: 30,
-                      color: CommonConstants.green2Color,
+                    Icon(
+                      ans.isCorrect ? Icons.check : Icons.cancel,
+                      size: 24,
+                      color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
                     ),
-                    SizedBox(width: 20),
-                    Text("3 x 1 = 3",
-                      style: TextStyle(
-                        color: CommonConstants.green2Color,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        "${ans.num1} x ${ans.num2} = ${ans.selected}",
+                        style: TextStyle(
+                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.sp
+                        ),
                       ),
                     )
                   ],
-                );
-              }),
+                ),
+              );
+            },
+          ),
+        );
+      }
+    );
+  }
+  Widget divList(BuildContext context){
+    return Consumer<DivProvider>(
+      builder: (context, divProvider, child){
+        List<AnswerRecord> answers = divProvider.ansHistory;
+        return answers.isEmpty ? Center(
+          child: Text("Chưa có câu trả lời nào",
+            style: TextStyle(
+              color: CommonConstants.blackColor,
+              fontSize: 18.sp
             ),
-          )
-        ],
-      ),
+          ),
+        ) : Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+          height: 666.h,
+          width: 343.w,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border(bottom: BorderSide(color: CommonConstants.brownColor, width: 1))
+          ),
+          child: ListView.builder(
+            padding: EdgeInsets.all(16.r),
+            itemCount: answers.length,
+            itemBuilder: (context, index){
+              AnswerRecord ans = answers[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 12.h),
+                padding: EdgeInsets.all(12.r),
+                child: Row(
+                  children: [
+                    Icon(
+                      ans.isCorrect ? Icons.check : Icons.cancel,
+                      size: 24,
+                      color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        "${ans.num1} : ${ans.num2} = ${ans.selected}",
+                        style: TextStyle(
+                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.sp
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

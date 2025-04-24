@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:math_app/core/provider/settings_provider.dart';
+import 'package:math_app/model/answer_record.dart';
 import 'package:math_app/model/div_model.dart';
+import 'package:math_app/model/settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DivProvider extends ChangeNotifier {
@@ -10,16 +13,91 @@ class DivProvider extends ChangeNotifier {
   List<DivModel> get div => _division;
   DivModel? _curr;
   DivModel? get curr => _curr;
-  DivProvider(){
-    loadDiv();
+  SettingsProvider settingsProvider;
+  late SettingsModel settingsModel;
+  List<AnswerRecord> _answerHistory = [];
+  List<AnswerRecord> _currSessions = [];
+  List<DivModel> _practices = [];
+  int practiceidx = 0;
+  int get currpracticeIdx => practiceidx;
+  int _correctCount = 0;
+  int get correctCount => _correctCount;
+  int get wrongCount => _currSessions.length - correctCount;
+  List<DivModel> get practices => _practices;
+  List<AnswerRecord> get ansHistory => _answerHistory;
+  List<AnswerRecord> get currSessions => _currSessions; 
+  bool get isCompleted => _answerHistory.length >= 10;
+  DivProvider({required this.settingsProvider}){
+    settingsModel = settingsProvider.settings;
+    settingsProvider.addListener(onSettingChanged);
   }
-  Future<void> loadDiv() async{
-    SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    List<String>? divEncode = _sharedPreferences.getStringList(key);
-    if (divEncode != null){
-      _division = divEncode.map((e) => DivModel.fromJson(e)).toList();
+  Future<void> init() async {
+    await loadDiv();
+    if(_division.isEmpty) await genDivQuestion(100);
+    startPracticeSession();
+  }
+  void onSettingChanged(){
+    final newSettings = settingsProvider.settings;
+    if(settingsModel != newSettings){
+      settingsModel = newSettings;
+      Future(() async{
+        try{
+          SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+          await _sharedPreferences.remove(key);
+          _division.clear();
+          _curr = null;
+          genDivQuestion(50);
+          startPracticeSession();
+        }catch(e){
+          throw Exception(e.toString());
+        }
+      });
+    }
+  }
+  void resetPractice(){
+    _practices.clear();
+    practiceidx = 0;
+    _currSessions.clear();
+    _correctCount = 0;
+    notifyListeners();
+  }
+  void startPracticeSession(){
+    resetPractice();
+    if(_division.isEmpty){
+      genDivQuestion(100);
+      return;
+    }
+    final random = Random();
+    final available = List.generate(_division.length, (i)=>i);
+    while(_practices.length < 10 && available.isNotEmpty) {
+      final ranIdx = random.nextInt(available.length);
+      final questLength = available[ranIdx];
+      _practices.add(_division[questLength]);
+      available.removeAt(ranIdx);
+    }
+    if(_practices.isNotEmpty){
+      _curr = _practices[0];
     }
     notifyListeners();
+  }
+  Future<void> loadDiv() async{
+    try{
+      SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
+      List<String>? divEncode = _sharedPreferences.getStringList(key);
+      if(divEncode != null && divEncode.isNotEmpty){
+        _division = divEncode.map((e)=>DivModel.fromJson(json.decode(e))).toList();
+        if(_division.isNotEmpty){
+          final random = Random();
+          _curr = _division[random.nextInt(_division.length)];
+        }else{
+          genDivQuestion(100);
+        }
+      }else{
+        genDivQuestion(100);
+      }
+    }catch(e){
+      genDivQuestion(10);
+    }
   }
   Future<void> saveDiv() async {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
@@ -27,40 +105,128 @@ class DivProvider extends ChangeNotifier {
     await _sharedPreferences.setStringList(key, divEncode);
     notifyListeners();
   }
-  void genDivQuestion() {
+  Future<void> genDivQuestion(int n) async{
     final random = Random();
-    int n1 = random.nextInt(9)+1;
-    int n2 = random.nextInt(9)+1;
-    int res = n1~/n2;
-    _curr = DivModel(num1: n1, num2: n2, res: res);
+    final resStart = settingsProvider.settings.resRange.start.toInt();
+    final resEnd = settingsProvider.settings.resRange.end.toInt();
+    final numStart = settingsProvider.settings.numRange.start.toInt();
+    final numEnd = settingsProvider.settings.numRange.end.toInt();
+    _division.clear();
+    int attempts = 0;
+    const maxAttempts = 1000;
+    while(_division.length < n && attempts < maxAttempts){
+      attempts++;
+      int res = numStart + random.nextInt(numEnd-numStart+1);
+      int num1 = resStart + random.nextInt(resEnd-resStart+1);
+      if(res!=0 && num1 % res == 0){
+        int num2 = num1~/res;
+        if(num2>=numStart && num2<=numEnd){
+          final div = DivModel(num1: num1, num2: num2, res: res, star: 0);
+          if(!_division.contains(div)){
+            _division.add(div);
+          }
+        }
+      }
+      if(_division.length % 20 == 0){
+        await Future.delayed(Duration.zero);
+      }
+    }
+    await saveDiv();
     notifyListeners();
   }
+  Future<void> setRandomCurrDiv() async{
+    if(_division.isEmpty){
+      genDivQuestion(10);
+      return;
+    } else {
+      final random = Random();
+      int maxAttempts = 10;
+      int attempts = 0;
+      int newIndex = random.nextInt(_division.length);
+      while(attempts < maxAttempts && 
+      _division.length > 1 &&
+      _curr != null &&
+      _division[newIndex].num1 == _curr!.num1 &&
+      _division[newIndex].num2 == _curr!.num2
+      ){
+        newIndex = random.nextInt(_division.length);
+        attempts++;
+      }
+      if(_division.length > newIndex){
+        _curr=_division[newIndex];
+        notifyListeners();
+      }
+    }
+  }
   void updateStar(bool isCorrect){
-    if(_curr!=null){
-      if(isCorrect){
-        if(_curr!.star<5) _curr!.star++;
+    if (_curr != null) {
+      final index = _division.indexWhere(
+        (m) => m.num1 == curr!.num1 && m.num2 == curr!.num2,
+      );
+      if (index != -1) {
+        int currStar = _division[index].star;
+        int newStar = isCorrect ? currStar + 1 : currStar - 1;
+        newStar = newStar.clamp(0, 5);
+        _division[index] = DivModel(
+          num1: curr!.num1,
+          num2: curr!.num2,
+          res: curr!.res,
+          star: newStar
+        );
+        _curr = _division[index];
+        practiceidx++;
+        notifyListeners();
+      }
+    }
+  }
+  Future<void> updateCurrDiv(DivModel currDiv) async{
+    try{
+      if(_division.isEmpty){
+        genDivQuestion(10);
       }else{
-        if(_curr!.star>0) _curr!.star--;
+        final random = Random();
+        int maxAttempts = 0;
+        int attempts = 0;
+        int newIndex = random.nextInt(_division.length);
+        while(attempts<maxAttempts &&
+        _division.length > 1 &&
+        _division[newIndex].num1 == _curr!.num1 &&
+        _division[newIndex].num2 == _curr!.num2
+        ){
+          newIndex = random.nextInt(_division.length);
+          attempts++;
+        }
+        if(_division.length > newIndex){
+          _curr=_division[newIndex];
+          notifyListeners();
+        }
+      }
+    }catch(e){
+      if(_curr==null && _division.isNotEmpty){
+        _curr = _division.first;
+        notifyListeners();
       }
     }
   }
-  void addNewDiv(DivModel div){
-    if(!_division.contains(div)){
-      _division.add(div);
-      saveDiv();
-    }
+  int getTotalStars() => _division.fold(0, (s,d)=>s+d.star);
+  int getStarCount(int n1, int n2){
+    final div = _division.firstWhere(
+      (d)=>d.num1==n1 && d.num2==n2,
+      orElse: () => DivModel(num1: n1, num2: n2, res: n1~/n2, star: 0)
+    );
+    return div.star;
   }
-  List<int> showAnswer() {
-    final random = Random();
-    if(_curr==null) return [];
-    List<int> answerList = [_curr!.res];
-    while(answerList.length<4){
-      int incorrectAnswer = random.nextInt(10);
-      if(!answerList.contains(incorrectAnswer)){
-        answerList.add(incorrectAnswer);
-      }
-    }
-    answerList.shuffle();
-    return answerList;
+  Future<void> recordAnswer(int selected) async{
+    if(_curr == null) return;
+    final bool isCorrect = selected == _curr!.res;
+    final ansRecord = AnswerRecord(
+      num1: _curr!.num1, 
+      num2: _curr!.num2, 
+      res: _curr!.res, 
+      selected: selected, 
+      isCorrect: isCorrect
+    );
+    _answerHistory.add(ansRecord);
+    _currSessions.add(ansRecord);
   }
 }

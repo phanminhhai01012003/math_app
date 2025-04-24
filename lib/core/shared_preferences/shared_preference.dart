@@ -6,6 +6,7 @@ class SharedPreference {
   static SharedPreference? _instance;
   static SharedPreferences? _sharedPreferences;
   SharedPreference._();
+  final Map<String, dynamic> cache = {};
   static SharedPreference get instance {
     _instance ??= SharedPreference._();
     return _instance!;
@@ -16,15 +17,15 @@ class SharedPreference {
   Future<bool> saveData<T>(String key, T value) async{
     if(_sharedPreferences == null) return false;
     switch(T){
-      case String:
+      case Type _ when T == String:
         return await _sharedPreferences!.setString(key, value as String);
-      case int:
+      case Type _ when T == int:
         return await _sharedPreferences!.setInt(key, value as int);
-      case double:
+      case Type _ when T == double:
         return await _sharedPreferences!.setDouble(key, value as double);
-      case bool:
+      case Type _ when T == bool:
         return await _sharedPreferences!.setBool(key, value as bool);
-      case const (List<String>):
+      case Type _ when T == List<String>:
         return await _sharedPreferences!.setStringList(key, value as List<String>);
       default:
         if (value != null) {
@@ -36,15 +37,15 @@ class SharedPreference {
   T? getData<T>(String key){
     if(_sharedPreferences == null) return null;
     switch(T){
-      case String:
+      case Type _ when T == String:
         return _sharedPreferences!.getString(key) as T;
-      case int:
+      case Type _ when T == int:
         return _sharedPreferences!.getInt(key) as T;
-      case double:
+      case Type _ when T == double:
         return _sharedPreferences!.getDouble(key) as T;
-      case bool:
+      case Type _ when T == bool:
         return _sharedPreferences!.getBool(key) as T;
-      case const (List<String>):
+      case Type _ when T == List<String>:
         return _sharedPreferences!.getStringList(key) as T;
       default:
         if (_sharedPreferences!.getString(key) != null) {
@@ -84,5 +85,12 @@ class SharedPreference {
   bool hasKey(String key){
     if(_sharedPreferences == null) return false;
     return _sharedPreferences!.containsKey(key);
+  }
+  Set<String> getKey() {
+    return _sharedPreferences?.getKeys() ?? {};
+  }
+  Future<void> reload() async {
+    await _sharedPreferences?.reload();
+    
   }
 }

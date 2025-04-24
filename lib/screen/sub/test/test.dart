@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 
 class Test extends StatefulWidget {
@@ -12,6 +13,7 @@ class _TestState extends State<Test> {
   String input = "";
   int num1 = 1, num2 = 6;
   bool isCorrect = false, showRes = false;
+  int questionCount = 0, correctCount = 0, wrongCount = 0;
   void numberPress(int num){
     if(input.length < 3) {setState(() {
       input+=num.toString();
@@ -24,14 +26,12 @@ class _TestState extends State<Test> {
   }
   void checkAnswer(){
     if(input.isNotEmpty) {
+      final int correctResult = num1 * num2;
+      final int userRes = int.parse(input);
       setState(() {
-        isCorrect = int.parse(input) == num1 * num2;
-      });
-      Future.delayed(Duration(seconds: 2), (){
-        if(mounted) {setState(() {
-          showRes = false;
-          if(isCorrect) input = '';
-        });}
+        isCorrect = userRes == correctResult;
+        showRes = true;
+        questionCount++;
       });
     }
   }
@@ -98,20 +98,28 @@ class _TestState extends State<Test> {
                         fontWeight: FontWeight.w600
                       ),
                     ),
-                    SizedBox(
-                      width: 76,
-                      height: 46,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: CommonConstants.brownColor),
-                            borderRadius: BorderRadius.circular(12)
+                    Container(
+                      height: 40.h,
+                      width: 86.w,
+                      decoration: BoxDecoration(
+                        color: CommonConstants.whiteColor,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: showRes ? Border.all(
+                          color: isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                          width: 2.w,
+                        ) : null
+                      ),
+                      child: Center(
+                        child: Text(
+                          input.isEmpty ? "?" : input,
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w600,
+                            color: showRes ? 
+                            (isCorrect ? CommonConstants.greenColor : CommonConstants.redColor) :
+                            CommonConstants.blackColor,
                           ),
-                          filled: true,
-                          fillColor: CommonConstants.whiteColor
                         ),
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
                       ),
                     )
                   ],

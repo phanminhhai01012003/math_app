@@ -60,7 +60,7 @@ class CustomDialog {
       }
     );
   }
-  void resetProgressDialog(BuildContext context){
+  void resetProgressDialog(BuildContext context, VoidCallback onPressed){
     final local = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -120,9 +120,7 @@ class CustomDialog {
                           side: BorderSide(color: CommonConstants.brownColor)
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: onPressed,
                       child: Text(local.ok,
                         style: TextStyle(
                           fontSize: 18,
