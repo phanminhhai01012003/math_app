@@ -170,4 +170,15 @@ class _PracticeQListState extends State<PracticeQList> {
       },
     );
   }
+  void showanswerHistory(BuildContext context){
+    final provider = context.read<MulProvider>();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+      )
+    );
+  }
 }

@@ -1,12 +1,16 @@
 import 'dart:math';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/common/custom_star.dart';
+import 'package:math_app/common/dialog.dart';
+import 'package:math_app/core/provider/div_provider.dart';
 import 'package:math_app/core/provider/mul_provider.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:math_app/model/div_model.dart';
 import 'package:math_app/model/mul_model.dart';
+import 'package:math_app/screen/sub/completed/result.dart';
 import 'package:math_app/screen/sub/practice/practice_div.dart';
 import 'package:math_app/screen/sub/practice/practice_mul.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +27,7 @@ class _PracticeState extends State<Practice> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 0), (){
+    Future.delayed(Duration.zero, (){
       if(!mounted) return;
       try{
         final mulProvider = Provider.of<MulProvider>(context, listen: false);
@@ -35,6 +39,7 @@ class _PracticeState extends State<Practice> {
   }
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     final settingsProvider = Provider.of<SettingsProvider>(context);
     final settings = settingsProvider.settings;
     bool isMul = settings.isMul;
@@ -62,7 +67,7 @@ class _PracticeState extends State<Practice> {
             ),
           ),
         ),
-        title: Text("Bài học",
+        title: Text(local.practice,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -132,12 +137,10 @@ class DataScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            for(int i=1; i<=5; i++) ...[
-              Icon(Icons.star,
-                size: 30,
-                color: CommonConstants.starColor,
-              )
-            ],
+            Selector<MulProvider, int>(
+              builder: (context, val, child) => CustomStar(), 
+              selector: (p0, p1)=>p1.curr!.star
+            ),
             SizedBox(height: 30.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -198,6 +201,7 @@ class _ChooseResultMulState extends State<ChooseResultMul> {
   bool? isCorrectAnswer;
   bool isProcessing = false;
   final random = Random();
+  CustomDialog dialog = CustomDialog();
   @override
   void initState() {
     // TODO: implement initState
@@ -247,10 +251,24 @@ class _ChooseResultMulState extends State<ChooseResultMul> {
     });
     await multiProvider.recordAnswer(isCorrect, selected);
     if(isCorrect) {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       if(!mounted) return;
       if(multiProvider.isCompleted){
-        
+        final settings = Provider.of<SettingsProvider>(context, listen: false);
+        settings.updateProcess(true,
+        (multiProvider.sumStar(multiProvider.multiplications) ~/ 144 * 100)
+        );
+        dialog.showFinishPracticeDialog(context, (){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Result(
+              correctCount: multiProvider.correctCount,
+              wrongCount: multiProvider.wrongCount,
+              total: 10,
+              stars: multiProvider.correctCount >= 8 ? 3 : multiProvider.correctCount >= 5 ? 2 : 1,
+            ))
+          );
+        });
       }
     } else{
       await Future.delayed(Duration(milliseconds: 500));
@@ -326,10 +344,12 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
   int? selectedAnswer;
   bool? isCorrectAnswer;
   bool isProcessing = false;
-  final random = Random();
+  late DivModel div;
+  CustomDialog dialog = CustomDialog();
   void initState() {
     // TODO: implement initState
     super.initState();
+    div = widget.currDiv;
     _genAnsOptions();
   }
   @override
@@ -347,10 +367,10 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
     }
   }
   void _genAnsOptions(){
-    if(widget.currDiv == null) return;
     resList.clear();
-    resList.add(widget.currDiv!.res);
-    final int correctRes = widget.currDiv!.res;
+    resList.add(div.res);
+    final random = Random();
+    final int correctRes = div.res;
     final int minRange = max(1, (correctRes*0.8).toInt());
     final int maxRange = max(minRange+10, (correctRes*1.2).toInt());
     while(resList.length < 4){
@@ -362,23 +382,31 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
     resList.shuffle();
   }
   Future<void> handleAnswer(int selected) async{
-    if(widget.currDiv == null || isProcessing) return;
+    if(isProcessing) return;
+    final bool isCorrect = selected == widget.currDiv.res;
+    final divProvider = Provider.of<DivProvider>(context, listen: false);
     setState(() {
       isProcessing = true;
       selectedAnswer = selected;
-    });
-    final bool isCorrect = selected == widget.currDiv!.res;
-    final multiProvider = Provider.of<MulProvider>(context, listen: false);
-    setState(() {
       isCorrectAnswer = isCorrect;
       if(!isCorrect) wrongAnswers.add(selected); 
     });
-    await multiProvider.recordAnswer(isCorrect, selected);
+    await divProvider.recordAnswer(selected);
     if(isCorrect) {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       if(!mounted) return;
-      if(multiProvider.isCompleted){
-        
+      if(divProvider.isCompleted){
+        dialog.showFinishPracticeDialog(context, () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Result(
+              correctCount: divProvider.correctCount,
+              wrongCount: divProvider.wrongCount,
+              total: 10,
+              stars: divProvider.correctCount >= 8 ? 3 : divProvider.correctCount >=5 ? 2 : 1,
+            ))
+          );
+        });
       }
     } else{
       await Future.delayed(Duration(milliseconds: 500));
@@ -407,7 +435,7 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
             children: resList.map((a){
               bool isWrong = wrongAnswers.contains(a);
               bool isSelected = selectedAnswer == a;
-              bool isCorrect = a==widget.currDiv?.res;
+              bool isCorrect = a==widget.currDiv.res;
               Color bgColor = CommonConstants.whiteColor;
               if(isSelected){
                 bgColor = isCorrect ? CommonConstants.greenColor : CommonConstants.redColor;

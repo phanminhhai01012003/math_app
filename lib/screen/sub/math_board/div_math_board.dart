@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:math_app/common/custom_star.dart';
 class DivMathBoard extends StatefulWidget {
   const DivMathBoard({super.key});
 
@@ -12,6 +13,7 @@ class _DivMathBoardState extends State<DivMathBoard> {
   int selectedIndex = 1;
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -39,7 +41,7 @@ class _DivMathBoardState extends State<DivMathBoard> {
             ),
           ),
         ),
-        title: Text("Bảng tính",
+        title: Text(local.calculate,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -61,20 +63,20 @@ class _DivMathBoardState extends State<DivMathBoard> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: CommonConstants.brownColor)
                 ),
-                child: CalculateAndRatingBar(context),
+                child: CalculateAndRatingBar(),
               ),
             ),
             SizedBox(height: 15),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: NumberButton(context),
+              child: NumberButton(),
             ),
           ],
         ),
       )
     );
   }
-  Widget CalculateAndRatingBar(BuildContext context){
+  Widget CalculateAndRatingBar(){
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -91,12 +93,7 @@ class _DivMathBoardState extends State<DivMathBoard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for (int i=1; i<=5; i++) ...[
-                  Icon(Icons.star,
-                    size: 18,
-                    color: CommonConstants.starColor,
-                  )
-                ],
+                CustomStar()
               ],
             ),
             SizedBox(height: 10),
@@ -112,7 +109,7 @@ class _DivMathBoardState extends State<DivMathBoard> {
       },
     );
   }
-  Widget NumberButton(BuildContext context) {
+  Widget NumberButton() {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 6,

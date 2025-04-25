@@ -42,5 +42,6 @@
   "result": "Result",
   "correct": "Correct",
   "incorrect": "Incorrect",
-  "info": "App Info"
+  "info": "App Info",
+  "ready": "Ready"
 }

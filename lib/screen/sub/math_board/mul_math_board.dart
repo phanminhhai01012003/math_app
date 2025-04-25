@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:math_app/common/custom_star.dart';
 class MulMathBoard extends StatefulWidget {
   const MulMathBoard({super.key});
 
@@ -12,6 +13,7 @@ class _MulMathBoardState extends State<MulMathBoard> {
   int selectedIndex = 1;
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -39,7 +41,7 @@ class _MulMathBoardState extends State<MulMathBoard> {
             ),
           ),
         ),
-        title: Text("Bảng tính",
+        title: Text(local.calculate,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -90,12 +92,7 @@ class _MulMathBoardState extends State<MulMathBoard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for (int i=1; i<=5; i++) ...[
-                  Icon(Icons.star,
-                    size: 18,
-                    color: CommonConstants.starColor,
-                  )
-                ],
+                CustomStar()
               ],
             ),
             SizedBox(height: 10),

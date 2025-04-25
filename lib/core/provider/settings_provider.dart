@@ -3,7 +3,7 @@ import 'package:math_app/core/shared_preferences/shared_preference.dart';
 import 'package:math_app/model/settings_model.dart';
 
 class SettingsProvider extends ChangeNotifier {
-  static const String settingKey = "Cài đặt";
+  static const String settingKey = "math_app_settings";
   late SettingsModel _settings;
   SettingsModel get settings => _settings;
   Future<void> init() async {
@@ -28,6 +28,16 @@ class SettingsProvider extends ChangeNotifier {
   }
   void updateMode(bool isMul) {
     _settings = _settings.copyWith(isMul: isMul);
+    _setupSettings();
+    notifyListeners();
+    notifyAllChanged();
+  }
+  void updateProcess(bool isMul, int process){
+    if(isMul){
+      _settings = _settings.copyWith(processMul: process);
+    }else{
+      _settings = _settings.copyWith(processDiv: process);
+    }
     _setupSettings();
     notifyListeners();
     notifyAllChanged();

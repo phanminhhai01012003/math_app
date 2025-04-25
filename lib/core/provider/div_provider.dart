@@ -8,7 +8,7 @@ import 'package:math_app/model/settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DivProvider extends ChangeNotifier {
-  String key = "Division";
+  String key = "division";
   List<DivModel> _division = [];
   List<DivModel> get div => _division;
   DivModel? _curr;
@@ -158,6 +158,26 @@ class DivProvider extends ChangeNotifier {
       }
     }
   }
+  void filterCorrectAnswers(){
+    final corrAns = _answerHistory.where((rec)=>rec.isCorrect).toList();
+    if(corrAns.isEmpty) return;
+    _practices = corrAns.map((rec)=>DivModel(
+      num1: rec.num1,
+      num2: rec.num2,
+      res: rec.res,
+      star: 0
+    )).toList();
+    if(_practices.length > 10){
+      _practices.shuffle();
+      _practices = _practices.sublist(0,10);
+    }
+    practiceidx=0;
+    _curr = _practices[0];
+    _currSessions.clear();
+    _correctCount = 0;
+    _answerHistory.clear();
+    notifyListeners();
+  }
   void updateStar(bool isCorrect){
     if (_curr != null) {
       final index = _division.indexWhere(
@@ -208,6 +228,13 @@ class DivProvider extends ChangeNotifier {
       }
     }
   }
+  Future<void> cleanDiv() async{
+    _division.clear();
+    _curr = null;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.remove(key);
+    notifyListeners();
+  }
   int getTotalStars() => _division.fold(0, (s,d)=>s+d.star);
   int getStarCount(int n1, int n2){
     final div = _division.firstWhere(
@@ -229,4 +256,5 @@ class DivProvider extends ChangeNotifier {
     _answerHistory.add(ansRecord);
     _currSessions.add(ansRecord);
   }
+  int sumStar(List<DivModel> list) => list.fold(0,(prev,div)=>prev+div.star);
 }

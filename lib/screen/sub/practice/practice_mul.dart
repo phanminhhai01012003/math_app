@@ -33,7 +33,7 @@ class _PracticeMulState extends State<PracticeMul> {
         return Column(
           children: [
             Divider(color: CommonConstants.brownColor, thickness: 1),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
             mul == null ? Center(child: CircularProgressIndicator()) : 
             Padding(
               padding: EdgeInsets.all(8),
@@ -44,7 +44,9 @@ class _PracticeMulState extends State<PracticeMul> {
                   SizedBox(height: 80.h),
                   ChooseResultMul(
                     currMul: mul,
-                    showNext: () {},
+                    showNext: () {
+
+                    },
                   )
                 ],
               ),

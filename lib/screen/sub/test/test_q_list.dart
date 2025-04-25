@@ -4,14 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/model/answer_record.dart';
 class TestQList extends StatefulWidget {
-  const TestQList({super.key});
+  final List<AnswerRecord> list;
+  const TestQList({super.key, required this.list});
 
   @override
   State<TestQList> createState() => _TestQListState();
 }
 
 class _TestQListState extends State<TestQList> {
-  List<AnswerRecord> list = [];
+  
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
@@ -75,9 +76,9 @@ class _TestQListState extends State<TestQList> {
               ),
               child: ListView.builder(
                 padding: EdgeInsets.all(16.w),
-                itemCount: list.length,
+                itemCount: widget.list.length,
                 itemBuilder: (context, index) {
-                  final ans = list[index];
+                  final ans = widget.list[index];
                   return Container(
                     margin: EdgeInsets.only(bottom: 8.h),
                     padding: EdgeInsets.all(12.w),

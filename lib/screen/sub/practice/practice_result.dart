@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/model/answer_record.dart';
 import 'package:math_app/screen/main/home.dart';
 import 'package:math_app/screen/sub/practice/practice.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,11 +11,15 @@ class PracticeResult extends StatefulWidget {
   final int correctCount;
   final int wrongCount;
   final int total;
+  final int stars;
+  final List<AnswerRecord> ansHistory;
   const PracticeResult({
     super.key, 
     required this.correctCount,
     required this.wrongCount,
     this.total = 10,
+    this.stars = 0,
+    required this.ansHistory,
   });
 
   @override
@@ -206,7 +211,7 @@ class _PracticeResultState extends State<PracticeResult> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Practice()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Practice()));
                 },
                 child: Row(
                   children: [
@@ -238,7 +243,7 @@ class _PracticeResultState extends State<PracticeResult> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Row(
                   children: [

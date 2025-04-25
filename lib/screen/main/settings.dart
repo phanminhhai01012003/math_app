@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/common/dialog.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
@@ -73,11 +75,10 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Divider(color: CommonConstants.brownColor, thickness: 2),
                   SizedBox(height: 10),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Column(
-                        children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 28.h),
+                    child: Column(
+                      children: [
                           Container(
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
@@ -90,68 +91,16 @@ class _SettingsState extends State<Settings> {
                                 Text(
                                   local.mode,
                                   style: TextStyle(
-                                      color: CommonConstants.blackColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    color: CommonConstants.blackColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isActive = isActive;
-                                    });
-                                    settingsProvider.updateMode(isActive);
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: 100,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        color: isActive
-                                            ? CommonConstants.yellowColor
-                                            : CommonConstants.whiteColor,
-                                        border: Border.all(
-                                            color: CommonConstants.brownColor)),
-                                    child: Text(
-                                      "A x B = ?",
-                                      style: TextStyle(
-                                          color: isActive
-                                              ? CommonConstants.blackColor
-                                              : CommonConstants.lightBrown,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isActive = !isActive;
-                                    });
-                                    settingsProvider.updateMode(isActive);
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: 100,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        color: isActive
-                                            ? CommonConstants.yellowColor
-                                            : CommonConstants.whiteColor,
-                                        border: Border.all(
-                                            color: CommonConstants.brownColor)),
-                                    child: Text(
-                                      "A : B = ?",
-                                      style: TextStyle(
-                                          color: isActive
-                                              ? CommonConstants.blackColor
-                                              : CommonConstants.lightBrown,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ),
+                                mode("A x B = ?", 
+                                isActive: isActive, 
+                                onTap: () => settingsProvider.updateMode(true)),
+                                mode("A : B = ?",
+                                isActive: !isActive, 
+                                onTap: () => settingsProvider.updateMode(false))
                               ],
                             ),
                           ),
@@ -175,13 +124,7 @@ class _SettingsState extends State<Settings> {
                                 SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    Checkbox(
-                                      value: isChecked1,
-                                      activeColor: CommonConstants.yellowColor,
-                                      onChanged: (value) {
-                                        settingsProvider.updateCheckNumRange(value!);
-                                      },
-                                    ),
+                                    checkBox(isChecked1, onChanged: (value) => settingsProvider.updateCheck(value!)),
                                     SizedBox(width: 10),
                                     Text(
                                       local.from,
@@ -191,36 +134,17 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w400),
                                     ),
                                     SizedBox(width: 10),
-                                    SizedBox(
-                                      width: 86,
-                                      height: 40,
-                                      child: TextFormField(
-                                        enabled: isChecked1,
-                                        initialValue: settings.resRange.start.toString(),
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: CommonConstants
-                                                        .brownColor),
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            filled: true,
-                                            fillColor:
-                                                CommonConstants.whiteColor),
-                                        keyboardType: TextInputType.numberWithOptions(
-                                          decimal: false,
-                                          signed: false
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        onChanged: (value) {
-                                          settingsProvider.updateResultRange(
-                                            RangeValues(
-                                              settings.resRange.start, 
-                                              (int.tryParse(value) ?? 90000).toDouble()
-                                            )
-                                          );
-                                        },
-                                      ),
+                                    inputBox(
+                                      settings.resRange.start.toString(),
+                                      enabled: settings.checkNumRange,
+                                      onChanged: (value) {
+                                        settingsProvider.updateResultRange(
+                                          RangeValues(
+                                            (int.tryParse(value) ?? 1).toDouble(),
+                                            settings.resRange.end
+                                          ),
+                                        );
+                                      }
                                     ),
                                     SizedBox(width: 10),
                                     Text(
@@ -231,37 +155,18 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w400),
                                     ),
                                     SizedBox(width: 10),
-                                    SizedBox(
-                                      width: 86,
-                                      height: 40,
-                                      child: TextFormField(
-                                          enabled: isChecked1,
-                                          initialValue: settings.resRange.end.toString(),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: CommonConstants
-                                                        .brownColor),
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            filled: true,
-                                            fillColor:
-                                                CommonConstants.whiteColor,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                          onChanged: (value){
-                                            settingsProvider.updateResultRange(
-                                              RangeValues(
-                                                (int.tryParse(value) ?? 1).toDouble(), 
-                                                settings.resRange.end
-                                              )
-                                            );
-                                          },
-                                          keyboardType: TextInputType.numberWithOptions(
-                                            signed: false,
-                                            decimal: false
-                                          )),
-                                    ),
+                                    inputBox(
+                                      settings.resRange.end.toString(),
+                                      enabled: settings.checkNumRange,
+                                      onChanged: (value){
+                                        settingsProvider.updateResultRange(
+                                          RangeValues(
+                                            settings.resRange.start,
+                                            (int.tryParse(value) ?? 90000).toDouble()
+                                          )
+                                        );
+                                      }
+                                    )
                                   ],
                                 )
                               ],
@@ -295,32 +200,16 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w400),
                                     ),
                                     SizedBox(width: 20),
-                                    SizedBox(
-                                      width: 86,
-                                      height: 40,
-                                      child: TextFormField(
-                                        initialValue: settings.numRange.start.toString(),
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: CommonConstants
-                                                        .brownColor),
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            filled: true,
-                                            fillColor:
-                                                CommonConstants.whiteColor),
-                                        keyboardType: TextInputType.number,
-                                        textAlign: TextAlign.center,
-                                        onChanged: (value) {
-                                          settingsProvider.updateNumberRange(
-                                            RangeValues(
-                                              settings.numRange.start,
-                                              (int.tryParse(value) ?? 90000).toDouble(),
-                                            )
-                                          );
-                                        },
-                                      ),
+                                    inputBox(
+                                      settings.numRange.start.toString(),
+                                      onChanged: (value){
+                                        settingsProvider.updateNumberRange(
+                                          RangeValues(
+                                            (int.tryParse(value) ?? 1).toDouble(),
+                                            settings.numRange.end,
+                                          )
+                                        );
+                                      }
                                     ),
                                     SizedBox(width: 20),
                                     Text(
@@ -331,32 +220,16 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w400),
                                     ),
                                     SizedBox(width: 20),
-                                    SizedBox(
-                                      width: 86,
-                                      height: 40,
-                                      child: TextFormField(
-                                        initialValue: settings.numRange.end.toString(),
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: CommonConstants
-                                                        .brownColor),
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            filled: true,
-                                            fillColor:
-                                                CommonConstants.whiteColor),
-                                        keyboardType: TextInputType.number,
-                                        textAlign: TextAlign.center,
-                                        onChanged: (value) {
-                                          settingsProvider.updateNumberRange(
-                                            RangeValues(
-                                              (int.tryParse(value) ?? 1).toDouble(),
-                                              settings.numRange.end
-                                            )
-                                          );
-                                        },
-                                      ),
+                                    inputBox(
+                                      settings.numRange.end.toString(),
+                                      onChanged: (value){
+                                        settingsProvider.updateNumberRange(
+                                          RangeValues(
+                                            settings.numRange.start,
+                                            (int.tryParse(value) ?? 90000).toDouble()
+                                          ),
+                                        );
+                                      }
                                     ),
                                   ],
                                 )
@@ -383,15 +256,9 @@ class _SettingsState extends State<Settings> {
                                 SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    Checkbox(
-                                      value: isChecked2,
-                                      activeColor: CommonConstants.yellowColor,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          isChecked2 = newValue!;
-                                        });
-                                        settingsProvider.updateCheck(isChecked2);
-                                      },
+                                    checkBox(
+                                      isChecked2,
+                                      onChanged: (value) => settingsProvider.updateCheck(value!)
                                     ),
                                     SizedBox(width: 5),
                                     Text(
@@ -410,27 +277,10 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w400),
                                     ),
                                     SizedBox(width: 10),
-                                    SizedBox(
-                                      width: 86,
-                                      height: 40,
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: CommonConstants
-                                                        .brownColor),
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            filled: true,
-                                            fillColor:
-                                                CommonConstants.whiteColor),
-                                        keyboardType: TextInputType.numberWithOptions(
-                                          signed: false,
-                                          decimal: false
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
+                                    inputBox(
+                                      settings.practicePercentage.toString(),
+                                      onChanged: (value) => settingsProvider.updatePracticePercentage((int.tryParse(value) ?? 20).toDouble())
+                                    )
                                   ],
                                 ),
                               ],
@@ -456,16 +306,7 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                     SizedBox(width: 10),
-                                    Checkbox(
-                                      value: isChecked3,
-                                      activeColor: CommonConstants.yellowColor,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          isChecked3 = newValue!;
-                                        });
-                                        settingsProvider.updateBlocks(isChecked3);
-                                      },
-                                    ),
+                                    checkBox(isChecked3, onChanged: (value) => settingsProvider.updateBlocks(value!))
                                   ],
                                 ),
                                 SizedBox(height: 20),
@@ -479,27 +320,9 @@ class _SettingsState extends State<Settings> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                     SizedBox(width: 10),
-                                    SizedBox(
-                                      width: 64,
-                                      height: 40,
-                                      child: TextFormField(
-                                        initialValue: settings.answerTime.toString(),
-                                        onChanged: (value){
-                                          settingsProvider.updateAnswerTime(int.tryParse(value) ?? 15);
-                                        },
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: CommonConstants
-                                                      .brownColor),
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          filled: true,
-                                          fillColor: CommonConstants.whiteColor,
-                                        ),
-                                        keyboardType: TextInputType.number,
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    inputBox(
+                                      settings.answerTime.toString(),
+                                      onChanged: (value) => settingsProvider.updateAnswerTime(int.tryParse(value) ?? 15)
                                     ),
                                     SizedBox(width: 10),
                                     Text(
@@ -574,11 +397,83 @@ class _SettingsState extends State<Settings> {
                         ],
                       ),
                     ),
-                  ),
                 ],
               ),
             );
           },
         ));
+  }
+  Widget mode(String text, {
+    bool isActive = false,
+    VoidCallback? onTap,
+    final double height = 40,
+    final double width = 100,
+  }){
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: width.w,
+        height: height.h,
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: isActive ? CommonConstants.yellowColor : CommonConstants.whiteColor,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(color: CommonConstants.brownColor),
+          boxShadow: isActive ? [BoxShadow(
+            color: CommonConstants.blackColor,
+            offset: Offset(0, 2),
+            blurRadius: 5
+          )] : null
+        ),
+        child: Text(text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: isActive ? CommonConstants.blackColor : CommonConstants.greyColor
+          ),
+        ),
+      ),
+    );
+  }
+  Widget checkBox(bool isChecked, {ValueChanged<bool?>? onChanged}){
+    return Checkbox(
+      value: isChecked,
+      onChanged: onChanged,
+      activeColor: CommonConstants.darkyellowColor,
+    );
+  }
+  Widget inputBox(String val, {String? suffix, ValueChanged<String>? onChanged, bool? enabled}){
+    return Container(
+      width: 86.w,
+      height: 40.h,
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      decoration: BoxDecoration(
+        color: CommonConstants.whiteColor,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: CommonConstants.brownColor)
+      ),
+      child: Center(
+        child: TextFormField(
+          enabled: enabled,
+          initialValue: val,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.numberWithOptions(
+            signed: false,
+            decimal: false
+          ),
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          style: TextStyle(fontSize: 14.sp),
+          decoration: InputDecoration(
+            isDense: true,
+            suffixText: suffix,
+            border: InputBorder.none,
+            suffixStyle: TextStyle(fontSize: 14.sp)
+          ),
+          textAlignVertical: TextAlignVertical.center,
+          onChanged: onChanged,
+        ),
+      ),
+    );
   }
 }

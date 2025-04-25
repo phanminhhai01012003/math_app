@@ -236,6 +236,26 @@ class MulProvider with ChangeNotifier {
     saveMul();
     notifyListeners();
   }
+  void filterCorrectAnswers(){
+    final corrAns = _answerHistory.where((rec)=>rec.isCorrect).toList();
+    if(corrAns.isEmpty) return;
+    _practices = corrAns.map((rec)=>MulModel(
+      num1: rec.num1,
+      num2: rec.num2,
+      res: rec.res,
+      star: 0
+    )).toList();
+    if(_practices.length > 10){
+      _practices.shuffle();
+      _practices = _practices.sublist(0,10);
+    }
+    practiceidx=0;
+    _curr = _practices[0];
+    _currSessions.clear();
+    _correctCount = 0;
+    _answerHistory.clear();
+    notifyListeners();
+  }
   Future<void> recordAnswer(bool isCorrect, int selected) async{
     if(_curr==null) return;
     final answerRec = AnswerRecord(
@@ -264,6 +284,7 @@ class MulProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+  int sumStar(List<MulModel> list) => list.fold(0, (prev, mul) => prev+mul.star);
   void retrySession(){
     if(_currSessions.isEmpty) return;
     _practices = _currSessions.map((r) => MulModel(

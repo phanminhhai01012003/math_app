@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/screen/sub/test/test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartTest extends StatefulWidget {
   const StartTest({super.key});
@@ -12,6 +13,7 @@ class StartTest extends StatefulWidget {
 class _StartTestState extends State<StartTest> {
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -38,7 +40,7 @@ class _StartTestState extends State<StartTest> {
           ),
         ),
         title: Text(
-          "Kiểm tra",
+          local.test,
           style: TextStyle(
             color: CommonConstants.blackColor,
             fontSize: 20,
@@ -64,7 +66,7 @@ class _StartTestState extends State<StartTest> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Center(
               child: Text(
-                "Bài kiểm tra gồm 10 câu hỏi, có giới hạn thời gian mỗi câu",
+                local.testbody1,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: CommonConstants.blackColor,
@@ -76,7 +78,7 @@ class _StartTestState extends State<StartTest> {
           SizedBox(height: 20),
           Center(
             child: Text(
-              "Chúc bạn may mắn!!",
+              local.testbody2,
               style: TextStyle(
                   color: CommonConstants.blackColor,
                   fontSize: 20,
@@ -102,7 +104,7 @@ class _StartTestState extends State<StartTest> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const Test()));
                 },
                 child: Text(
-                  "Sẵn sàng",
+                  local.ready,
                   style: TextStyle(
                       color: CommonConstants.blackColor,
                       fontSize: 18,
