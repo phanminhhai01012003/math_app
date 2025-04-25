@@ -29,7 +29,7 @@ class _TestResultState extends State<TestResult> {
           padding: EdgeInsets.all(12),
           child: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
             },
             child: Container(
               width: 30,
@@ -94,7 +94,7 @@ class _TestResultState extends State<TestResult> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("10",
+                        Text("${widget.correctCount}",
                           style: TextStyle(
                             color: CommonConstants.whiteColor,
                             fontSize: 26,
@@ -126,7 +126,7 @@ class _TestResultState extends State<TestResult> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("0",
+                        Text("${widget.wrongCount}",
                           style: TextStyle(
                             color: CommonConstants.whiteColor,
                             fontSize: 26,

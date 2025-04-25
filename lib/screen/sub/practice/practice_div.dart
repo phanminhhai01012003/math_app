@@ -44,7 +44,9 @@ class _PracticeDivState extends State<PracticeDiv> {
                   SizedBox(height: 80.h),
                   ChooseResultDiv(
                     currDiv: div,
-                    showNext: () {},
+                    showNext: () {
+                      
+                    },
                   )
                 ],
               ),

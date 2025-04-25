@@ -32,7 +32,7 @@ class _PracticeResultState extends State<PracticeResult> {
           padding: EdgeInsets.all(12),
           child: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
             },
             child: Container(
               width: 30,

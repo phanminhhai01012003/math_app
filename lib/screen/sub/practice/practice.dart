@@ -347,7 +347,7 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
     }
   }
   void _genAnsOptions(){
-    if(widget.currDiv==null) return;
+    if(widget.currDiv == null) return;
     resList.clear();
     resList.add(widget.currDiv!.res);
     final int correctRes = widget.currDiv!.res;
