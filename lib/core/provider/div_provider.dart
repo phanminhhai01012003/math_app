@@ -30,6 +30,7 @@ class DivProvider extends ChangeNotifier {
   DivProvider({required this.settingsProvider}){
     settingsModel = settingsProvider.settings;
     settingsProvider.addListener(onSettingChanged);
+    init();
   }
   Future<void> init() async {
     await loadDiv();

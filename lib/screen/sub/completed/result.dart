@@ -248,6 +248,7 @@ class _ResultState extends State<Result> {
                 : const PracticeQList()));
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.list_alt_rounded,
                   size: 20,
@@ -287,6 +288,7 @@ class _ResultState extends State<Result> {
               Navigator.pop(context);
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.refresh_outlined,
                   size: 20,
@@ -319,6 +321,7 @@ class _ResultState extends State<Result> {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.arrow_back,
                   size: 20,

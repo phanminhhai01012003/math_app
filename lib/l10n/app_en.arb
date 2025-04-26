@@ -46,5 +46,7 @@
   "incorrect": "Incorrect",
   "info": "App Info",
   "ready": "Ready",
-  "noanswer": "No answer yet"
+  "noanswer": "No answer yet",
+  "success": "Success!",
+  "fail": "Fail!"
 }

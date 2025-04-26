@@ -57,18 +57,26 @@ class _PracticeQListState extends State<PracticeQList> {
         ),
         centerTitle: true,
       ),
-      body: isMul ? mulList(context) : divList(context)
+      body: Column(
+        children: [
+          Divider(color: CommonConstants.brownColor, thickness: 1),
+          SizedBox(height: 20.h),
+          isMul ? mulList(context) : divList(context),
+        ],
+      )
     );
   }
   Widget mulList(BuildContext context){
+    final local = AppLocalizations.of(context)!;
     return Consumer<MulProvider>(
       builder: (context, mulProvider, child){
         List<AnswerRecord> answers = mulProvider.ansHistory;
         return answers.isEmpty ? Center(
-          child: Text("Chưa có câu trả lời nào",
+          child: Text(local.noanswer,
             style: TextStyle(
               color: CommonConstants.blackColor,
-              fontSize: 18.sp
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500
             ),
           ),
         ) : Container(
@@ -78,7 +86,14 @@ class _PracticeQListState extends State<PracticeQList> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border(bottom: BorderSide(color: CommonConstants.brownColor, width: 1))
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                spreadRadius: 5,
+                color: CommonConstants.lightYellow2,
+                offset: Offset(0, 5)
+              )
+            ]
           ),
           child: ListView.builder(
             padding: EdgeInsets.all(16.r),
@@ -134,7 +149,14 @@ class _PracticeQListState extends State<PracticeQList> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border(bottom: BorderSide(color: CommonConstants.brownColor, width: 1))
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                spreadRadius: 5,
+                color: CommonConstants.lightYellow2,
+                offset: Offset(0, 5)
+              )
+            ]
           ),
           child: ListView.builder(
             padding: EdgeInsets.all(16.r),
@@ -151,7 +173,7 @@ class _PracticeQListState extends State<PracticeQList> {
                       size: 24,
                       color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 22.w),
                     Expanded(
                       child: Text(
                         "${ans.num1} : ${ans.num2} = ${ans.selected}",

@@ -124,7 +124,7 @@ class _SettingsState extends State<Settings> {
                                 SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    checkBox(isChecked1, onChanged: (value) => settingsProvider.updateCheck(value!)),
+                                    checkBox(isChecked1, onChanged: (value) => settingsProvider.updateCheckNumRange(value!)),
                                     SizedBox(width: 10),
                                     Text(
                                       local.from,

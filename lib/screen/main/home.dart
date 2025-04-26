@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/circle_progress.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/common/message.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:math_app/main.dart';
 import 'package:math_app/screen/main/about.dart';
@@ -14,6 +15,7 @@ import 'package:math_app/screen/sub/practice/practice.dart';
 import 'package:math_app/screen/sub/test/start_test.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,6 +25,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Message _message = Message();
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
@@ -34,6 +37,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         toolbarHeight: 20,
       ),
@@ -288,6 +292,15 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   GestureDetector(
+                    onTap: () async{
+                      final params = ShareParams(text: "Let's share with others");
+                      final shareResult = await SharePlus.instance.share(params);
+                      if (shareResult.status == ShareResultStatus.success){
+                        _message.showSuccessMessage(context, local.success);
+                      }else{
+                        _message.showErrorMessage(context, local.fail);
+                      }
+                    },
                     child: Center(
                       child: Container(
                         width: 44,

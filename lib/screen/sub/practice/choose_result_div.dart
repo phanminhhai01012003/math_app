@@ -142,7 +142,7 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
                   }
                 },
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInCubic,
                   transform: selectedAnswer == a ? Matrix4.translationValues(0, 1, 0) : Matrix4.identity(),
                   alignment: Alignment.center,

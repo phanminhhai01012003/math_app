@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
+import 'package:math_app/core/provider/mul_provider.dart';
+import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:math_app/model/answer_record.dart';
+import 'package:provider/provider.dart';
 class TestQList extends StatefulWidget {
   final List<AnswerRecord> list;
   const TestQList({super.key, required this.list});
@@ -16,6 +19,8 @@ class _TestQListState extends State<TestQList> {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
+    final provider = context.watch<SettingsProvider>();
+    bool isMul = provider.settings.isMul;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
@@ -56,54 +61,135 @@ class _TestQListState extends State<TestQList> {
         children: [
           Divider(color: CommonConstants.brownColor, thickness: 1),
           SizedBox(height: 20),
-          Padding(
-            padding: EdgeInsets.all(24.r),
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(19),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 5,
-                    spreadRadius: 5,
-                    color: CommonConstants.lightYellow2,
-                    offset: Offset(0, 5)
-                  )
-                ],
-              ),
-              child: ListView.builder(
-                padding: EdgeInsets.all(16.w),
-                itemCount: widget.list.length,
-                itemBuilder: (context, index) {
-                  final ans = widget.list[index];
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 8.h),
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.r)
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          ans.isCorrect ? Icons.check : Icons.cancel,
-                          size: 20.w,
-                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                        ),
-                        SizedBox()
-                      ],
-                    ),
-                  );
-                },
-              )
-            ),
-          )
+          isMul ? mulList(context) : divList(context)
         ],
       ),
+    );
+  }
+  Widget mulList(BuildContext context){
+    final local = AppLocalizations.of(context)!;
+    return Consumer<MulProvider>(
+      builder: (context, mulProvider, child){
+        return widget.list.isEmpty ? Center(
+          child: Text(local.noanswer,
+            style: TextStyle(
+              color: CommonConstants.blackColor,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500
+            ),
+          ),
+        ) : Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+          height: 666.h,
+          width: 343.w,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                spreadRadius: 5,
+                color: CommonConstants.lightYellow2,
+                offset: Offset(0, 5)
+              )
+            ]
+          ),
+          child: ListView.builder(
+            padding: EdgeInsets.all(16.r),
+            itemCount: widget.list.length,
+            itemBuilder: (context, index){
+              AnswerRecord ans = widget.list[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 12.h),
+                padding: EdgeInsets.all(12.r),
+                child: Row(
+                  children: [
+                    Icon(
+                      ans.isCorrect ? Icons.check : Icons.cancel,
+                      size: 24,
+                      color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        "${ans.num1} x ${ans.num2} = ${ans.selected}",
+                        style: TextStyle(
+                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.sp
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      }
+    );
+  }
+  Widget divList(BuildContext context){
+    final local = AppLocalizations.of(context)!;
+    return Consumer<MulProvider>(
+      builder: (context, mulProvider, child){
+        return widget.list.isEmpty ? Center(
+          child: Text(local.noanswer,
+            style: TextStyle(
+              color: CommonConstants.blackColor,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500
+            ),
+          ),
+        ) : Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+          height: 666.h,
+          width: 343.w,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                spreadRadius: 5,
+                color: CommonConstants.lightYellow2,
+                offset: Offset(0, 5)
+              )
+            ]
+          ),
+          child: ListView.builder(
+            padding: EdgeInsets.all(16.r),
+            itemCount: widget.list.length,
+            itemBuilder: (context, index){
+              AnswerRecord ans = widget.list[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 12.h),
+                padding: EdgeInsets.all(12.r),
+                child: Row(
+                  children: [
+                    Icon(
+                      ans.isCorrect ? Icons.check : Icons.cancel,
+                      size: 24,
+                      color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        "${ans.num1} : ${ans.num2} = ${ans.selected}",
+                        style: TextStyle(
+                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.sp
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      }
     );
   }
 }

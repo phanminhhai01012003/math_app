@@ -18,23 +18,26 @@ class _StartTestState extends State<StartTest> {
       backgroundColor: CommonConstants.whiteColor,
       appBar: AppBar(
         backgroundColor: CommonConstants.whiteColor,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: CommonConstants.yellowColor,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: CommonConstants.brownColor, width: 1),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.arrow_back,
-                color: CommonConstants.blackColor,
-                size: 30,
+        leading: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: CommonConstants.yellowColor,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: CommonConstants.brownColor, width: 1),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: CommonConstants.blackColor,
+                  size: 30,
+                ),
               ),
             ),
           ),
@@ -85,7 +88,7 @@ class _StartTestState extends State<StartTest> {
                   fontWeight: FontWeight.w400),
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(

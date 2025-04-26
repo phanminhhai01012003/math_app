@@ -46,5 +46,7 @@
   "incorrect": "Sai",
   "info": "Thông tin ứng dụng",
   "ready": "Sẵn sàng",
-  "noanswer": "Chưa có câu trả lời nào"
+  "noanswer": "Chưa có câu trả lời nào",
+  "success": "Thành công!",
+  "fail": "Lỗi!"
 }

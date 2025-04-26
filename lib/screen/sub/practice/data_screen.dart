@@ -62,63 +62,63 @@ class DataScreenState extends State<DataScreen> with SingleTickerProviderStateMi
           alignment: Alignment.center,
           child: Container(
             height: 127.h,
-      width: 343.w,
-      decoration: BoxDecoration(
-        color: CommonConstants.lightYellow,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Selector<MulProvider, int>(
-              builder: (context, val, child) => CustomStar(), 
-              selector: (p0, p1)=>p1.curr!.star,
-              shouldRebuild: (previous, next) => true,
+            width: 343.w,
+            decoration: BoxDecoration(
+              color: CommonConstants.lightYellow,
+              borderRadius: BorderRadius.circular(12.r),
             ),
-            SizedBox(height: 30.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                isMul ? Text("${widget.num1} x ${widget.num2} = ",
-                  style: TextStyle(
-                    color: CommonConstants.blackColor,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w600
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Selector<MulProvider, int>(
+                    builder: (context, val, child) => CustomStar(), 
+                    selector: (p0, p1) => p1.curr!.star,
+                    shouldRebuild: (previous, next) => true,
                   ),
-                ) : Text("${widget.num1} : ${widget.num2} = ",
-                  style: TextStyle(
-                    color: CommonConstants.blackColor,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    width: 47,
-                    height: 47,
-                    decoration: BoxDecoration(
-                      color: CommonConstants.whiteColor,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: CommonConstants.brownColor, width: 1),
-                    ),
-                    child: Text("?",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: CommonConstants.brownColor
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      isMul ? Text("${widget.num1} x ${widget.num2} = ",
+                        style: TextStyle(
+                        color: CommonConstants.blackColor,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.w600
+                        ),
+                      ) : Text("${widget.num1} : ${widget.num2} = ",
+                        style: TextStyle(
+                        color: CommonConstants.blackColor,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.w600
+                        ),
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
+                      Center(
+                        child: Container(
+                          width: 47,
+                          height: 47,
+                          decoration: BoxDecoration(
+                            color: CommonConstants.whiteColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: CommonConstants.brownColor, width: 1),
+                          ),
+                          child: Text("?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: CommonConstants.brownColor
+                          ),
+                        ),
+                      ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
           ),
         );
       },

@@ -4,7 +4,7 @@ import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/core/provider/div_provider.dart';
 import 'package:math_app/screen/sub/practice/choose_result_div.dart';
 import 'package:math_app/screen/sub/practice/data_screen.dart';
-import 'package:math_app/screen/sub/practice/practice.dart';
+import 'package:math_app/screen/sub/practice/dot_images.dart';
 import 'package:provider/provider.dart';
 
 class PracticeDiv extends StatefulWidget {

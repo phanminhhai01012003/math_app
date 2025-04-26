@@ -54,7 +54,7 @@ class _TestState extends State<Test> {
     handleAnswer(input.isEmpty ? "?" : input);
   }
   void numberPress(int num){
-    if(input.length < 4 && !isProcessing && !timeup) {
+    if(input.length < 10 && !isProcessing && !timeup) {
       setState(() {
         input+=num.toString();
       });
@@ -257,8 +257,8 @@ class _TestState extends State<Test> {
                           ),
                         ),
                         Container(
-                          height: 46,
-                          width: 46,
+                          height: 46.h,
+                          width: input.isEmpty ? 46.w : 100.w,
                           decoration: BoxDecoration(
                             color: CommonConstants.whiteColor,
                             border: Border.all(color: CommonConstants.brownColor),
