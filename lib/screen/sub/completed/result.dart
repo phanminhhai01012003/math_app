@@ -154,7 +154,7 @@ class _ResultState extends State<Result> {
                       incorrectBox(widget.wrongCount.toString(), local.incorrect)
                     ],
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 32.h),
                   actionButton(local, isMul)
                 ]
               ],
@@ -227,9 +227,10 @@ class _ResultState extends State<Result> {
   Widget actionButton(AppLocalizations local, bool isMul){
     return Column(
       children: [
+        SizedBox(height: 32.h),
         SizedBox(
-          width: 274.w,
-          height: 56.h,
+          width: 343.w,
+          height: 60.h,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: CommonConstants.yellowColor,
@@ -264,8 +265,8 @@ class _ResultState extends State<Result> {
         ),
         SizedBox(height: 20),
         SizedBox(
-          width: 274.w,
-          height: 56.h,
+          width: 343.w,
+          height: 60.h,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: CommonConstants.yellowColor,
@@ -303,8 +304,8 @@ class _ResultState extends State<Result> {
         ),
         SizedBox(height: 20),
         SizedBox(
-          width: 274.w,
-          height: 56.h,
+          width: 343.w,
+          height: 60.h,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: CommonConstants.whiteColor,

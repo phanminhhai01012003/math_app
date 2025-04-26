@@ -116,11 +116,12 @@ class _PracticeQListState extends State<PracticeQList> {
     );
   }
   Widget divList(BuildContext context){
+    final local = AppLocalizations.of(context)!;
     return Consumer<DivProvider>(
       builder: (context, divProvider, child){
         List<AnswerRecord> answers = divProvider.ansHistory;
         return answers.isEmpty ? Center(
-          child: Text("Chưa có câu trả lời nào",
+          child: Text(local.noanswer,
             style: TextStyle(
               color: CommonConstants.blackColor,
               fontSize: 18.sp
@@ -168,17 +169,6 @@ class _PracticeQListState extends State<PracticeQList> {
           ),
         );
       },
-    );
-  }
-  void showanswerHistory(BuildContext context){
-    final provider = context.read<MulProvider>();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-      )
     );
   }
 }

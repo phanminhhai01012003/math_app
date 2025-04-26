@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/core/provider/div_provider.dart';
+import 'package:math_app/screen/sub/practice/choose_result_div.dart';
+import 'package:math_app/screen/sub/practice/data_screen.dart';
 import 'package:math_app/screen/sub/practice/practice.dart';
 import 'package:provider/provider.dart';
 
@@ -44,9 +46,7 @@ class _PracticeDivState extends State<PracticeDiv> {
                   SizedBox(height: 80.h),
                   ChooseResultDiv(
                     currDiv: div,
-                    showNext: () {
-                      
-                    },
+                    showNext: () {},
                   )
                 ],
               ),

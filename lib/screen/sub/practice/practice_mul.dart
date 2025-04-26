@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:math_app/core/provider/mul_provider.dart';
+import 'package:math_app/screen/sub/practice/choose_result_mul.dart';
+import 'package:math_app/screen/sub/practice/data_screen.dart';
 import 'package:math_app/screen/sub/practice/practice.dart';
 import 'package:provider/provider.dart';
 
@@ -44,9 +46,7 @@ class _PracticeMulState extends State<PracticeMul> {
                   SizedBox(height: 80.h),
                   ChooseResultMul(
                     currMul: mul,
-                    showNext: () {
-
-                    },
+                    showNext: () {},
                   )
                 ],
               ),
