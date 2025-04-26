@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -67,7 +68,7 @@ class _LanguageState extends State<Language> {
                   onTap: () => widget.onLocalChanged(Locale("vi")),
                   selected: currentLocal.languageCode == 'vi',
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 10.w),
                 LanguageTile(
                   flag: enFlag,
                   title: "English",

@@ -16,9 +16,9 @@ class MulProvider with ChangeNotifier {
   SettingsProvider settingsProvider;
   SettingsModel settingsModel;
   List<MulModel> _practices = [];
-  List<AnswerRecord> _answerHistory = [];
+  final List<AnswerRecord> _answerHistory = [];
   List<AnswerRecord> get ansHistory => _answerHistory;
-  List<AnswerRecord> _currSessions = [];
+  final List<AnswerRecord> _currSessions = [];
   List<AnswerRecord> get currSession => _currSessions;
   List<MulModel> get practice => _practices;
   int practiceidx = 0;

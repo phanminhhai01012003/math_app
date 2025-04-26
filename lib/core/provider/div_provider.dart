@@ -15,8 +15,8 @@ class DivProvider extends ChangeNotifier {
   DivModel? get curr => _curr;
   SettingsProvider settingsProvider;
   late SettingsModel settingsModel;
-  List<AnswerRecord> _answerHistory = [];
-  List<AnswerRecord> _currSessions = [];
+  final List<AnswerRecord> _answerHistory = [];
+  final List<AnswerRecord> _currSessions = [];
   List<DivModel> _practices = [];
   int practiceidx = 0;
   int get currpracticeIdx => practiceidx;
