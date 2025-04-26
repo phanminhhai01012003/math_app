@@ -1,17 +1,8 @@
-import 'dart:math';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_app/common/common_constants.dart';
-import 'package:math_app/common/custom_star.dart';
-import 'package:math_app/common/dialog.dart';
-import 'package:math_app/core/provider/div_provider.dart';
 import 'package:math_app/core/provider/mul_provider.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
-import 'package:math_app/model/div_model.dart';
-import 'package:math_app/model/mul_model.dart';
-import 'package:math_app/screen/sub/completed/result.dart';
-import 'package:math_app/screen/sub/practice/data_screen.dart';
 import 'package:math_app/screen/sub/practice/practice_div.dart';
 import 'package:math_app/screen/sub/practice/practice_mul.dart';
 import 'package:provider/provider.dart';
