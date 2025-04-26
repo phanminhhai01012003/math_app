@@ -7,6 +7,8 @@ import 'package:math_app/core/provider/div_provider.dart';
 import 'package:math_app/core/provider/mul_provider.dart';
 import 'package:math_app/core/provider/settings_provider.dart';
 import 'package:math_app/model/answer_record.dart';
+import 'package:math_app/model/div_model.dart';
+import 'package:math_app/model/mul_model.dart';
 import 'package:math_app/screen/sub/completed/result.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,7 +22,7 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   String input = "";
-  List<Map<String, dynamic>> qList = [];
+  List<dynamic> qList = [];
   List<AnswerRecord> ansHistory = [];
   bool isProcessing = false, 
   showRes = false, 
@@ -32,33 +34,19 @@ class _TestState extends State<Test> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
       final settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
       final isMul = settingsProvider.settings.isMul;
       setState(() {
         if(isMul){
           final mulProvider = Provider.of<MulProvider>(context, listen: false);
-          final all = List.from(mulProvider.multiplications);
-          all.shuffle();
-          qList = all.take(10).map((m)=>{
-            "num1": m.num1,
-            "num2": m.num2,
-            "res": m.res,
-            "type": m.key
-          }).toList();
+          qList = mulProvider.getMultiAnswer();
         }else{
           final divProvider = Provider.of<DivProvider>(context, listen: false);
-          final all = List.from(divProvider.div);
-          all.shuffle();
-          qList = all.take(10).map((d)=>{
-            "num1": d.num1,
-            "num2": d.num2,
-            "res": d.res,
-            "type": d.key
-          }).toList();
+          qList = divProvider.getDivisionAnswer();
         }
-        isLoading = false;
       });
+      await Future.delayed(const Duration(seconds: 2));
     });
   }
   void timeUp(){
@@ -66,7 +54,7 @@ class _TestState extends State<Test> {
     handleAnswer(input.isEmpty ? "?" : input);
   }
   void numberPress(int num){
-    if(input.length < 3 && !isProcessing && !timeup) {
+    if(input.length < 4 && !isProcessing && !timeup) {
       setState(() {
         input+=num.toString();
       });
@@ -83,17 +71,28 @@ class _TestState extends State<Test> {
     if(qList.isEmpty) return;
     final currQuestion = qList[currQuestionIndex]; 
     final inputRes = int.tryParse(ans) ?? 0;
-    final corrRes = currQuestion["res"] as int;
-    final isCorrect = inputRes == corrRes;
+    late int corrRes;
+    late int num1, num2;
+    if(currQuestion is MulModel){
+      corrRes = currQuestion.res;
+      num1 = currQuestion.num1;
+      num2 = currQuestion.num2;
+    }else if(currQuestion is DivModel){
+      corrRes = currQuestion.res;
+      num1 = currQuestion.num1;
+      num2 = currQuestion.num2;
+    }else {return;}
+    final bool isCorrect = inputRes == corrRes;
     setState(() {
       isProcessing = true;
       showRes = true;
       ansHistory.add(AnswerRecord(
-        num1: currQuestion["num1"] as int,
-        num2: currQuestion["num2"] as int,
+        num1: num1,
+        num2: num2,
         res: corrRes,
         selected: inputRes,
-        isCorrect: isCorrect
+        isCorrect: isCorrect,
+        star: 0,
       ));
     });
     Future.delayed(Duration(milliseconds: 500), (){
@@ -105,7 +104,6 @@ class _TestState extends State<Test> {
             correctCount: correctCount,
             wrongCount: 10-correctCount,
             total: 10,
-            stars: (correctCount * 3) ~/ 10,
             ansHistory: ansHistory,
             isTesting: true,
           )));
@@ -126,34 +124,89 @@ class _TestState extends State<Test> {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
-    final currQuestion = qList[currQuestionIndex];
     final settingsProvider = Provider.of<SettingsProvider>(context);
-    final isMul = settingsProvider.settings.isMul;
-    final answerTime = settingsProvider.settings.answerTime; 
-    return Scaffold(
-      backgroundColor: CommonConstants.whiteColor,
-      appBar: AppBar(
-        backgroundColor: CommonConstants.whiteColor,
-        leading: Padding(
-          padding: const EdgeInsets.all(12),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: CommonConstants.yellowColor,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: CommonConstants.brownColor, width: 1),
-              ),
-              child: Center(
-                child: Icon(Icons.arrow_back,
-                  color: CommonConstants.blackColor,
-                  size: 30,
+    Future.delayed(Duration(seconds: 2));
+    return Consumer<SettingsProvider>(
+      builder: (context, settings, child){
+        if(qList.isEmpty){
+          return Scaffold(
+            backgroundColor: CommonConstants.whiteColor,
+            appBar: AppBar(
+              backgroundColor: CommonConstants.whiteColor,
+              leading: Padding(
+                padding: const EdgeInsets.all(12),
+                child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: CommonConstants.yellowColor,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: CommonConstants.brownColor, width: 1),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.arrow_back,
+                      color: CommonConstants.blackColor,
+                      size: 30,
+                    ),
+                  ),
+                 ),
+               ),
+            ),
+            title: Text(local.test,
+              style: TextStyle(
+             color: CommonConstants.blackColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+            ),
+          centerTitle: true,
+          actions: [
+            Padding(
+             padding: EdgeInsets.all(12),
+             child: Text("${currQuestionIndex + 1}/10"),
+            ),
+            ],
+          ),
+          body: Center(child: CircularProgressIndicator())
+          );
+        }
+        final currQuestion = qList[currQuestionIndex];
+        String qText;
+        if(currQuestion is MulModel){
+          qText = "${currQuestion.num1} x ${currQuestion.num2} = ";
+        }else if(currQuestion is DivModel){
+          qText = "${currQuestion.num1} : ${currQuestion.num2} = ";
+        }else {
+          qText = "?";
+        }
+        return Scaffold(
+          backgroundColor: CommonConstants.whiteColor,
+          appBar: AppBar(
+            backgroundColor: CommonConstants.whiteColor,
+            leading: Padding(
+              padding: const EdgeInsets.all(12),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: CommonConstants.yellowColor,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: CommonConstants.brownColor, width: 1),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.arrow_back,
+                    color: CommonConstants.blackColor,
+                    size: 30,
+                  ),
                 ),
-              ),
             ),
           ),
         ),
@@ -174,18 +227,13 @@ class _TestState extends State<Test> {
       ),
       body: Column(
         children: [
-          if (isLoading) ...[
-            Center(child: CircularProgressIndicator(strokeWidth: 3.w))
-          ],
-          if (qList.isEmpty) ...[
-            Center(child: Text("No data"))
-          ],
           CountDown(
             key: _key,
-            duration: answerTime,
+            duration: settingsProvider.settings.answerTime,
             height: 8.h,
             complete: timeUp,
           ),
+          SizedBox(height: 10.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
             child: Column(
@@ -202,28 +250,26 @@ class _TestState extends State<Test> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "${currQuestion["num1"]} ${isMul ? "x" : ":"} ${currQuestion["num2"]} = ",
+                          qText,
                           style: TextStyle(
-                            color: CommonConstants.blackColor,
                             fontSize: 24.sp,
                             fontWeight: FontWeight.w600
                           ),
                         ),
                         Container(
-                          height: 46.h,
-                          width: 46.w,
+                          height: 46,
+                          width: 46,
                           decoration: BoxDecoration(
                             color: CommonConstants.whiteColor,
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: CommonConstants.brownColor)
+                            border: Border.all(color: CommonConstants.brownColor),
+                            borderRadius: BorderRadius.circular(12.r)
                           ),
                           child: Center(
-                            child: Text(
-                              input.isEmpty ? "?" : input,
+                            child: Text(input.isEmpty ? "?" : input,
                               style: TextStyle(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.w600,
-                                color: showRes ? CommonConstants.blackColor : CommonConstants.brownColor 
+                                color: CommonConstants.brownColor
                               ),
                             ),
                           ),
@@ -231,48 +277,50 @@ class _TestState extends State<Test> {
                       ],
                     ),
                   ),
-                )
+                ),
+                SizedBox(height: 100.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buttonNumber(1),
+                    buttonNumber(2),
+                    buttonNumber(3),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buttonNumber(4),
+                    buttonNumber(5),
+                    buttonNumber(6)
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buttonNumber(7),
+                    buttonNumber(8),
+                    buttonNumber(9)
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    clearButton(),
+                    buttonNumber(0),
+                    acceptButton()
+                  ],
+                ),
               ],
             ),
           ),
-          SizedBox(height: 100.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              buttonNumber(1),
-              buttonNumber(2),
-              buttonNumber(3),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              buttonNumber(4),
-              buttonNumber(5),
-              buttonNumber(6)
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              buttonNumber(7),
-              buttonNumber(8),
-              buttonNumber(9)
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              clearButton(),
-              buttonNumber(0),
-              acceptButton()
-            ],
-          ),
         ],
       )
+        );
+      },
     );
   }
   Widget buttonNumber(int num){

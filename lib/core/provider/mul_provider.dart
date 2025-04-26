@@ -31,8 +31,23 @@ class MulProvider with ChangeNotifier {
     settingsProvider.addListener(onSettingChanged);
     loadMul();
   }
-  void setMul(List<MulModel> multiplication){
-    _multiplications = multiplication;
+  List<MulModel> getMultiAnswer(){
+    if(_multiplications.isEmpty) genMulQuestion(100);
+    List<MulModel> temp = List.from(_multiplications);
+    temp.shuffle();
+    return temp.take(10).toList();
+  }
+  void listOfNumber(int num, List<MulModel> list){
+    list = List.generate(12, (index){
+      return list.firstWhere(
+        (e) => e.num1 == num && e.num2 == index && e.star == 0, 
+        orElse: () => MulModel(
+          num1: num,
+          num2: index,
+          res: num * index,
+          star: 0,
+        ));
+    });
     notifyListeners();
   }
   void resetPractice(){
@@ -263,7 +278,8 @@ class MulProvider with ChangeNotifier {
       num2: _curr!.num2, 
       res: _curr!.res, 
       selected: selected, 
-      isCorrect: isCorrect
+      isCorrect: isCorrect,
+      star: _curr!.star,
     );
     _answerHistory.add(answerRec);
     _currSessions.add(answerRec);

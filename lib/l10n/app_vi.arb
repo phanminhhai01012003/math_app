@@ -1,7 +1,9 @@
 {
-  "title": "Bảng tính cửu chương",
+  "title1": "Bảng tính",
+  "title2": "cửu chương",
   "calculate": "Bảng tính",
   "practice": "Luyện tập",
+  "lesson": "Bài học",
   "test": "Kiểm tra",
   "settings": "Cài đặt",
   "language": "Ngôn ngữ",
@@ -43,5 +45,6 @@
   "correct": "Chính xác",
   "incorrect": "Sai",
   "info": "Thông tin ứng dụng",
-  "ready": "Sẵn sàng"
+  "ready": "Sẵn sàng",
+  "noanswer": "Chưa có câu trả lời nào"
 }

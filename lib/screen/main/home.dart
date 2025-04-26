@@ -26,7 +26,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
     final settings = settingsProvider.settings;
-    bool isActive = settings.isMul;
+    final bool isActive = settings.isMul;
+    final int processMul = settingsProvider.settings.processMul;
+    final int processDiv = settingsProvider.settings.processDiv;
     final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,
@@ -95,7 +97,16 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(height: 10),
               Center(
-                child: Text(local.title,
+                child: Text(local.title1,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w600,
+                    color: CommonConstants.blackColor
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(local.title2,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w600,
@@ -110,12 +121,14 @@ class _HomeState extends State<Home> {
                   CircleProgress(
                     selected: isActive,
                     operation: "A X B",
-                    percentage: "0%",
+                    percentage: "$processMul%",
+                    val: 0,
                   ),
                   CircleProgress(
                     selected: !isActive, 
                     operation: "A : B", 
-                    percentage: "0%"
+                    percentage: "$processDiv%",
+                    val: 0,
                   )
                 ],
               ),
@@ -318,7 +331,8 @@ class CircleProgress extends StatelessWidget {
   bool selected;
   String operation;
   String percentage;
-  CircleProgress({super.key, required this.selected, required this.operation, required this.percentage});
+  double val;
+  CircleProgress({super.key, required this.selected, required this.operation, required this.percentage, required this.val});
 
   @override
   Widget build(BuildContext context) {
@@ -328,10 +342,10 @@ class CircleProgress extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         SizedBox(
-          width: 96.w,
-          height: 96.h,
+          width: 126.w,
+          height: 126.h,
           child: CircularProgressIndicator(
-            value: double.parse(percentage.replaceAll('%', ''))/100,
+            value: val,
             strokeWidth: 3,
             backgroundColor: CommonConstants.greyColor,
             color: selected ? CommonConstants.greenColor : CommonConstants.lightYellow2,
@@ -348,7 +362,7 @@ class CircleProgress extends StatelessWidget {
             decoration: BoxDecoration(
               color: selected ? CommonConstants.greenColor : CommonConstants.whiteColor,
               border: Border.all(color: selected ? CommonConstants.green2Color : CommonConstants.lightYellow2),
-              borderRadius: BorderRadius.circular(96),
+              shape: BoxShape.circle,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

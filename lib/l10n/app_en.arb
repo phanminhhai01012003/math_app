@@ -1,7 +1,9 @@
 {
-  "title": "Multiplication Table",
+  "title1": "Calculation",
+  "title2": "Table",
   "calculate": "Calculator",
   "practice": "Practice",
+  "lesson": "Lesson",
   "test": "Test",
   "settings": "Settings",
   "language": "Language",
@@ -43,5 +45,6 @@
   "correct": "Correct",
   "incorrect": "Incorrect",
   "info": "App Info",
-  "ready": "Ready"
+  "ready": "Ready",
+  "noanswer": "No answer yet"
 }

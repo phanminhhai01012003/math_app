@@ -15,6 +15,7 @@ class AnswerRecordProvider extends ChangeNotifier {
       res: res,
       selected: 0,
       isCorrect: isCorrect,
+      star: 0,
     );
     listAnswer.add(a);
     notifyListeners();

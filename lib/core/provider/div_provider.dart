@@ -54,6 +54,12 @@ class DivProvider extends ChangeNotifier {
       });
     }
   }
+List<DivModel> getDivisionAnswer(){
+  if(_division.isEmpty) genDivQuestion(100);
+  List<DivModel> temp = List.from(_division);
+  temp.shuffle();
+  return temp.take(10).toList();
+}
   void resetPractice(){
     _practices.clear();
     practiceidx = 0;
@@ -251,7 +257,8 @@ class DivProvider extends ChangeNotifier {
       num2: _curr!.num2, 
       res: _curr!.res, 
       selected: selected, 
-      isCorrect: isCorrect
+      isCorrect: isCorrect,
+      star: _curr!.star
     );
     _answerHistory.add(ansRecord);
     _currSessions.add(ansRecord);
