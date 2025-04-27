@@ -27,6 +27,7 @@ class _PracticeMulState extends State<PracticeMul> {
     "assets/dot/dot9.png",
     "assets/dot/dot10.png",
   ];
+  final GlobalKey<DataScreenState> key = GlobalKey<DataScreenState>();
   @override
   Widget build(BuildContext context) {
     return Consumer<MulProvider>(
@@ -42,7 +43,7 @@ class _PracticeMulState extends State<PracticeMul> {
               child: Column(
                 children: [
                   DotImages(dotImages: dotImages),
-                  DataScreen(num1: mul.num1, num2: mul.num2),
+                  DataScreen(key: key,num1: mul.num1, num2: mul.num2),
                   SizedBox(height: 80.h),
                   ChooseResultMul(
                     currMul: mul,

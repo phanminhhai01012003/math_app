@@ -41,6 +41,7 @@ class DivProvider extends ChangeNotifier {
     final newSettings = settingsProvider.settings;
     if(settingsModel != newSettings){
       settingsModel = newSettings;
+      resetPractice();
       Future(() async{
         try{
           SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
@@ -102,13 +103,14 @@ List<DivModel> getDivisionAnswer(){
       }else{
         genDivQuestion(100);
       }
+      notifyListeners();
     }catch(e){
       genDivQuestion(10);
     }
   }
   Future<void> saveDiv() async {
     SharedPreferences _sharedPreferences = await SharedPreferences.getInstance();
-    List<String>? divEncode = _division.map((mul) => json.encode(mul.toJson())).toList();
+    List<String>? divEncode = _division.map((div) => json.encode(div.toJson())).toList();
     await _sharedPreferences.setStringList(key, divEncode);
     notifyListeners();
   }
@@ -263,6 +265,22 @@ List<DivModel> getDivisionAnswer(){
     );
     _answerHistory.add(ansRecord);
     _currSessions.add(ansRecord);
+    if(isCorrect){
+      _correctCount++;
+      updateStar(true);
+      await Future.delayed(Duration(seconds: 1));
+      if(!isCompleted){
+        if(currpracticeIdx < _practices.length - 1){
+          practiceidx++;
+          _curr = _practices[practiceidx];
+        }else{
+          startPracticeSession();
+        }
+      }
+    }else{
+      updateStar(false);
+    }
+    notifyListeners();
   }
   int sumStar(List<DivModel> list) => list.fold(0,(prev,div)=>prev+div.star);
 }

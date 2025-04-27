@@ -79,52 +79,55 @@ class _PracticeQListState extends State<PracticeQList> {
               fontWeight: FontWeight.w500
             ),
           ),
-        ) : Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
-          height: 666.h,
-          width: 343.w,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 5,
-                spreadRadius: 5,
-                color: CommonConstants.lightYellow2,
-                offset: Offset(0, 5)
-              )
-            ]
-          ),
-          child: ListView.builder(
-            padding: EdgeInsets.all(16.r),
-            itemCount: answers.length,
-            itemBuilder: (context, index){
-              AnswerRecord ans = answers[index];
-              return Container(
-                margin: EdgeInsets.only(bottom: 12.h),
-                padding: EdgeInsets.all(12.r),
-                child: Row(
-                  children: [
-                    Icon(
-                      ans.isCorrect ? Icons.check : Icons.cancel,
-                      size: 24,
-                      color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Text(
-                        "${ans.num1} x ${ans.num2} = ${ans.selected}",
-                        style: TextStyle(
-                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20.sp
-                        ),
+        ) : Padding(
+          padding: EdgeInsets.only(top: 18.h, bottom: 60.h, left: 30.w, right: 30.w),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+            height: 666.h,
+            width: 343.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 5,
+                  spreadRadius: 5,
+                  color: CommonConstants.lightYellow2,
+                  offset: Offset(0, 5)
+                )
+              ]
+            ),
+            child: ListView.builder(
+              padding: EdgeInsets.all(16.r),
+              itemCount: answers.length,
+              itemBuilder: (context, index){
+                AnswerRecord ans = answers[index];
+                return Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  padding: EdgeInsets.all(12.r),
+                  child: Row(
+                    children: [
+                      Icon(
+                        ans.isCorrect ? Icons.check : Icons.cancel,
+                        size: 24,
+                        color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
                       ),
-                    )
-                  ],
-                ),
-              );
-            },
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Text(
+                          "${ans.num1} x ${ans.num2} = ${ans.selected}",
+                          style: TextStyle(
+                            color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20.sp
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         );
       }
@@ -142,52 +145,55 @@ class _PracticeQListState extends State<PracticeQList> {
               fontSize: 18.sp
             ),
           ),
-        ) : Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
-          height: 666.h,
-          width: 343.w,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 5,
-                spreadRadius: 5,
-                color: CommonConstants.lightYellow2,
-                offset: Offset(0, 5)
-              )
-            ]
-          ),
-          child: ListView.builder(
-            padding: EdgeInsets.all(16.r),
-            itemCount: answers.length,
-            itemBuilder: (context, index){
-              AnswerRecord ans = answers[index];
-              return Container(
-                margin: EdgeInsets.only(bottom: 12.h),
-                padding: EdgeInsets.all(12.r),
-                child: Row(
-                  children: [
-                    Icon(
-                      ans.isCorrect ? Icons.check : Icons.cancel,
-                      size: 24,
-                      color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                    ),
-                    SizedBox(width: 22.w),
-                    Expanded(
-                      child: Text(
-                        "${ans.num1} : ${ans.num2} = ${ans.selected}",
-                        style: TextStyle(
-                          color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20.sp
-                        ),
+        ) : Padding(
+          padding: EdgeInsets.only(top: 18.h, bottom: 60.h, left: 30.w, right: 30.w),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+            height: 666.h,
+            width: 343.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 5,
+                  spreadRadius: 5,
+                  color: CommonConstants.lightYellow2,
+                  offset: Offset(0, 5)
+                )
+              ]
+            ),
+            child: ListView.builder(
+              padding: EdgeInsets.all(16.r),
+              itemCount: answers.length,
+              itemBuilder: (context, index){
+                AnswerRecord ans = answers[index];
+                return Container(
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  padding: EdgeInsets.all(12.r),
+                  child: Row(
+                    children: [
+                      Icon(
+                        ans.isCorrect ? Icons.check : Icons.cancel,
+                        size: 24,
+                        color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
                       ),
-                    )
-                  ],
-                ),
-              );
-            },
+                      SizedBox(width: 22.w),
+                      Expanded(
+                        child: Text(
+                          "${ans.num1} : ${ans.num2} = ${ans.selected}",
+                          style: TextStyle(
+                            color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20.sp
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         );
       },

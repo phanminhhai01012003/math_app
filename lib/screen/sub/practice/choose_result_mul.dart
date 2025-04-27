@@ -76,11 +76,12 @@ class _ChooseResultMulState extends State<ChooseResultMul> {
       isCorrectAnswer = isCorrect;
       if(!isCorrect) wrongAnswers.add(selected); 
     });
-    await multiProvider.recordAnswer(isCorrect, selected);
     if(isCorrect) {
+      key.currentState?.rotateAnimation();
       await Future.delayed(Duration(seconds: 1));
+      await multiProvider.recordAnswer(isCorrect, selected);
       if(!mounted) return;
-      if(multiProvider.isCompleted){
+      if(multiProvider.correctCount >= 10){
         final settings = Provider.of<SettingsProvider>(context, listen: false);
         settings.updateProcess(true,
         (multiProvider.sumStar(multiProvider.multiplications) ~/ 144 * 100)
@@ -97,6 +98,7 @@ class _ChooseResultMulState extends State<ChooseResultMul> {
         });
       }
     } else{
+      await multiProvider.recordAnswer(isCorrect, selected);
       await Future.delayed(Duration(milliseconds: 500));
     }
     if(mounted){

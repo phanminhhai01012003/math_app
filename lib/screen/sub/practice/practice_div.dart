@@ -27,6 +27,7 @@ class _PracticeDivState extends State<PracticeDiv> {
     "assets/dot/dot9.png",
     "assets/dot/dot10.png",
   ];
+  final GlobalKey<DataScreenState> key = GlobalKey<DataScreenState>();
   @override
   Widget build(BuildContext context) {
     return Consumer<DivProvider>(
@@ -42,7 +43,7 @@ class _PracticeDivState extends State<PracticeDiv> {
               child: Column(
                 children: [
                   DotImages(dotImages: dotImages),
-                  DataScreen(num1: div.num1, num2: div.num2),
+                  DataScreen(key: key, num1: div.num1, num2: div.num2),
                   SizedBox(height: 80.h),
                   ChooseResultDiv(
                     currDiv: div,

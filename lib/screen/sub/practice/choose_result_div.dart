@@ -7,6 +7,7 @@ import 'package:math_app/common/dialog.dart';
 import 'package:math_app/core/provider/div_provider.dart';
 import 'package:math_app/model/div_model.dart';
 import 'package:math_app/screen/sub/completed/result.dart';
+import 'package:math_app/screen/sub/practice/data_screen.dart';
 import 'package:provider/provider.dart';
 
 class ChooseResultDiv extends StatefulWidget {
@@ -25,6 +26,7 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
   bool? isCorrectAnswer;
   bool isProcessing = false;
   late DivModel div;
+  final GlobalKey<DataScreenState> key = GlobalKey<DataScreenState>();
   CustomDialog dialog = CustomDialog();
   void initState() {
     // TODO: implement initState
@@ -36,14 +38,15 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
   void didUpdateWidget(covariant ChooseResultDiv oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    if(widget.currDiv != oldWidget.currDiv){
-      setState(() {
-        selectedAnswer=null;
-        isCorrectAnswer=null;
-        wrongAnswers.clear();
-        isProcessing=false;
-      });
+    if(oldWidget.currDiv.num1 != widget.currDiv.num1 || oldWidget.currDiv.num2 != widget.currDiv.num2){
+      div = widget.currDiv;
       _genAnsOptions();
+      setState(() {
+        selectedAnswer = null;
+        isCorrectAnswer = null;
+        wrongAnswers.clear();
+        isProcessing = false;
+      });
     }
   }
   void _genAnsOptions(){
@@ -73,6 +76,7 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
     });
     await divProvider.recordAnswer(selected);
     if(isCorrect) {
+      key.currentState?.rotateAnimation();
       await Future.delayed(Duration(seconds: 1));
       if(!mounted) return;
       if(divProvider.isCompleted){
@@ -107,6 +111,7 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
           SizedBox(height: 15.h),
           GridView.count(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
             mainAxisSpacing: 16.h,
             crossAxisSpacing: 16.w,
