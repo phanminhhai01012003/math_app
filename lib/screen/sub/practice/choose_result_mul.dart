@@ -127,7 +127,9 @@ class _ChooseResultMulState extends State<ChooseResultMul> {
               bool isSelected = selectedAnswer == a;
               bool isCorrect = a==widget.currMul?.res;
               Color bgColor = CommonConstants.whiteColor;
-              if(isSelected){
+              if(isWrong){
+                bgColor = CommonConstants.redColor;
+              }else if(isSelected){
                 bgColor = isCorrect ? CommonConstants.greenColor : CommonConstants.redColor;
               }
               return GestureDetector(

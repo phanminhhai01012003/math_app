@@ -93,14 +93,14 @@ class _ChooseResultDivState extends State<ChooseResultDiv> {
       }
     } else{
       await Future.delayed(Duration(milliseconds: 500));
-    }
-    if(mounted){
-      setState(() {
-        selectedAnswer=null;
-        isCorrectAnswer=null;
-        isProcessing=false;
-      });
-    }
+      if(mounted){
+        setState(() {
+          selectedAnswer=null;
+          isCorrectAnswer=null;
+          isProcessing=false;
+        });
+      }
+    }    
   }
   @override
   Widget build(BuildContext context) {

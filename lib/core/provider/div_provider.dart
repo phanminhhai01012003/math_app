@@ -58,7 +58,7 @@ class DivProvider extends ChangeNotifier {
   }
 List<DivModel> getDivisionAnswer(){
   if(_division.isEmpty) genDivQuestion(100);
-  List<DivModel> temp = List.from(_division);
+  final List<DivModel> temp = List.from(_division);
   temp.shuffle();
   return temp.take(10).toList();
 }
@@ -147,7 +147,8 @@ List<DivModel> getDivisionAnswer(){
     if(_division.isEmpty){
       genDivQuestion(10);
       return;
-    } else {
+    } 
+    if (_division.isNotEmpty) {
       final random = Random();
       int maxAttempts = 10;
       int attempts = 0;
@@ -190,16 +191,16 @@ List<DivModel> getDivisionAnswer(){
   void updateStar(bool isCorrect){
     if (_curr != null) {
       final index = _division.indexWhere(
-        (m) => m.num1 == curr!.num1 && m.num2 == curr!.num2,
+        (d) => d.num1 == _curr!.num1 && d.num2 == _curr!.num2,
       );
       if (index != -1) {
         int currStar = _division[index].star;
         int newStar = isCorrect ? currStar + 1 : currStar - 1;
         newStar = newStar.clamp(0, 5);
         _division[index] = DivModel(
-          num1: curr!.num1,
-          num2: curr!.num2,
-          res: curr!.res,
+          num1: _curr!.num1,
+          num2: _curr!.num2,
+          res: _curr!.res,
           star: newStar
         );
         _curr = _division[index];
