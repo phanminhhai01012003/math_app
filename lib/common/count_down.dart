@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:math_app/common/common_constants.dart';
 
 class CountDown extends StatefulWidget {
-  int duration;
-  VoidCallback complete;
-  double height;
-  CountDown({super.key, required this.duration, required this.complete, required this.height});
+  final int duration;
+  final VoidCallback complete;
+  final double height;
+  const CountDown({super.key, required this.duration, required this.complete, required this.height});
 
   @override
   State<CountDown> createState() => CountDownState();

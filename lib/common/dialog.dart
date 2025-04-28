@@ -20,11 +20,13 @@ class CustomDialog {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(local.congratulations1, 
-                  style: TextStyle(
-                    color: CommonConstants.blackColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w400
+                Center(
+                  child: Text(local.congratulations1, 
+                    style: TextStyle(
+                      color: CommonConstants.blackColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -78,11 +80,13 @@ class CustomDialog {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(local.congratulations2, 
-                  style: TextStyle(
-                    color: CommonConstants.blackColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w400
+                Center(
+                  child: Text(local.congratulations2, 
+                    style: TextStyle(
+                      color: CommonConstants.blackColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),

@@ -61,97 +61,46 @@ class _PracticeQListState extends State<PracticeQList> {
         children: [
           Divider(color: CommonConstants.brownColor, thickness: 1),
           SizedBox(height: 20.h),
-          isMul ? mulList(context) : divList(context),
+          isMul ? mulList() : divList(),
         ],
       )
     );
   }
-  Widget mulList(BuildContext context){
-    final local = AppLocalizations.of(context)!;
+  Widget mulList(){
     return Consumer<MulProvider>(
       builder: (context, mulProvider, child){
         List<AnswerRecord> answers = mulProvider.ansHistory;
-        return answers.isEmpty ? Center(
-          child: Text(local.noanswer,
-            style: TextStyle(
-              color: CommonConstants.blackColor,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w500
-            ),
-          ),
-        ) : Padding(
-          padding: EdgeInsets.only(top: 18.h, bottom: 60.h, left: 30.w, right: 30.w),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
-            height: 666.h,
-            width: 343.w,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 5,
-                  spreadRadius: 5,
-                  color: CommonConstants.lightYellow2,
-                  offset: Offset(0, 5)
-                )
-              ]
-            ),
-            child: ListView.builder(
-              padding: EdgeInsets.all(16.r),
-              itemCount: answers.length,
-              itemBuilder: (context, index){
-                AnswerRecord ans = answers[index];
-                return Container(
-                  margin: EdgeInsets.only(bottom: 12.h),
-                  padding: EdgeInsets.all(12.r),
-                  child: Row(
-                    children: [
-                      Icon(
-                        ans.isCorrect ? Icons.check : Icons.cancel,
-                        size: 24,
-                        color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Text(
-                          "${ans.num1} x ${ans.num2} = ${ans.selected}",
-                          style: TextStyle(
-                            color: ans.isCorrect ? CommonConstants.greenColor : CommonConstants.redColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20.sp
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        );
+        return answerList(context, answers, true);
       }
     );
   }
-  Widget divList(BuildContext context){
-    final local = AppLocalizations.of(context)!;
+  Widget divList(){
     return Consumer<DivProvider>(
       builder: (context, divProvider, child){
         List<AnswerRecord> answers = divProvider.ansHistory;
-        return answers.isEmpty ? Center(
-          child: Text(local.noanswer,
-            style: TextStyle(
-              color: CommonConstants.blackColor,
-              fontSize: 18.sp
-            ),
+        return answerList(context, answers, false);
+      },
+    );
+  }
+  Widget answerList(BuildContext context, List<AnswerRecord> answers, bool isMul){
+    final local = AppLocalizations.of(context)!;
+    if(answers.isEmpty){
+      return Center(
+        child: Text(local.noanswer,
+          style: TextStyle(
+            color: CommonConstants.blackColor,
+            fontSize: 18.sp
           ),
-        ) : Padding(
-          padding: EdgeInsets.only(top: 18.h, bottom: 60.h, left: 30.w, right: 30.w),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
-            height: 666.h,
-            width: 343.w,
-            decoration: BoxDecoration(
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.only(top: 18.h, bottom: 60.h, left: 30.w, right: 30.w),
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+          height: 666.h,
+          width: 343.w,
+          decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16.r),
               boxShadow: [
@@ -196,7 +145,5 @@ class _PracticeQListState extends State<PracticeQList> {
             ),
           ),
         );
-      },
-    );
   }
 }

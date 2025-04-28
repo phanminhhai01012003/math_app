@@ -31,8 +31,8 @@ class _HomeState extends State<Home> {
     final settingsProvider = Provider.of<SettingsProvider>(context);
     final settings = settingsProvider.settings;
     final bool isActive = settings.isMul;
-    final int processMul = settingsProvider.settings.processMul;
-    final int processDiv = settingsProvider.settings.processDiv;
+    final int processMul = settings.processMul;
+    final int processDiv = settings.processDiv;
     final local = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: CommonConstants.whiteColor,

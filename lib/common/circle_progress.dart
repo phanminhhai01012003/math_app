@@ -14,6 +14,7 @@ class CircleProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
+    bool isMul = settingsProvider.settings.isMul;
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -28,7 +29,7 @@ class CircleProgress extends StatelessWidget {
           ),
         ),
         InkWell(
-          onTap: () => settingsProvider.updateMode(selected),
+          onTap: () => settingsProvider.updateMode(!isMul),
           child: Container(
             width: 96.w,
             height: 96.h,
