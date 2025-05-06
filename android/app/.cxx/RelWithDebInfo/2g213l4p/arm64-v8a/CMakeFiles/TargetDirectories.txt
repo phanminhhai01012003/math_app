@@ -1,0 +1,2 @@
+C:/Users/Phan Minh Hai/Flutter/math_app/android/app/.cxx/RelWithDebInfo/2g213l4p/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Phan Minh Hai/Flutter/math_app/android/app/.cxx/RelWithDebInfo/2g213l4p/arm64-v8a/CMakeFiles/rebuild_cache.dir

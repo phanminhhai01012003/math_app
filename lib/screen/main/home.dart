@@ -151,9 +151,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   onPressed: () {
-                    isActive 
-                    ? Navigator.push(context, MaterialPageRoute(builder: (context) => const MulMathBoard())) 
-                    : Navigator.push(context, MaterialPageRoute(builder: (context) => const DivMathBoard()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => isActive ? MulMathBoard() : DivMathBoard()));
                   },
                   child: Text(local.calculate, 
                     style: TextStyle(
